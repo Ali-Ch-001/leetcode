@@ -68,4 +68,25 @@ digits (0-9), plus '+', minus '-', or dot '.'.
 
 class Solution:
     def isNumber(self, s: str) -> bool:
-        
+        digits = set("0123456789")
+        seen_digit = False
+        seen_dot = False
+        seen_exp = False
+        for i, ch in enumerate(s):
+            if ch in ("+", "-"):
+                if i > 0 and s[i - 1] not in ("e", "E"):
+                    return False
+            elif ch in digits:
+                seen_digit = True
+            elif ch == ".":
+                if seen_dot or seen_exp:
+                    return False
+                seen_dot = True
+            elif ch in ("e", "E"):
+                if seen_exp or not seen_digit:
+                    return False
+                seen_exp = True
+                seen_digit = False
+            else:
+                return False
+        return seen_digit

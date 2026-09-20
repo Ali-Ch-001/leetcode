@@ -47,7 +47,18 @@ Could you devise a constant O(1) space solution?
 #         self.right = right
 class Solution:
     def recoverTree(self, root: TreeNode | None) -> None:
-        """
-        Do not return anything, modify root in-place instead.
-        """
-        
+        first = second = previous = None
+        node = root
+        stack = []
+        while node or stack:
+            while node:
+                stack.append(node)
+                node = node.left
+            node = stack.pop()
+            if previous and node.val < previous.val:
+                if not first:
+                    first = previous
+                second = node
+            previous = node
+            node = node.right
+        first.val, second.val = second.val, first.val

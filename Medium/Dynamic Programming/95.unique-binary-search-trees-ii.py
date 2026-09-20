@@ -37,4 +37,14 @@ Constraints:
 #         self.right = right
 class Solution:
     def generateTrees(self, n: int) -> list[TreeNode | None]:
-        
+        def build(start: int, end: int) -> list[TreeNode | None]:
+            if start > end:
+                return [None]
+            trees = []
+            for root_value in range(start, end + 1):
+                for left in build(start, root_value - 1):
+                    for right in build(root_value + 1, end):
+                        trees.append(TreeNode(root_value, left, right))
+            return trees
+
+        return build(1, n)

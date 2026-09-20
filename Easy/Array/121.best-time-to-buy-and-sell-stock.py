@@ -43,4 +43,9 @@ Constraints:
 
 class Solution:
     def maxProfit(self, prices: list[int]) -> int:
-        
+        best = 0
+        lowest = prices[0]
+        for price in prices[1:]:
+            best = max(best, price - lowest)
+            lowest = min(lowest, price)
+        return best

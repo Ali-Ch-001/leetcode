@@ -49,4 +49,16 @@ Constraints:
 #         self.right = right
 class Solution:
     def isValidBST(self, root: TreeNode | None) -> bool:
-        
+        stack = []
+        node = root
+        previous = None
+        while node or stack:
+            while node:
+                stack.append(node)
+                node = node.left
+            node = stack.pop()
+            if previous is not None and node.val <= previous:
+                return False
+            previous = node.val
+            node = node.right
+        return True

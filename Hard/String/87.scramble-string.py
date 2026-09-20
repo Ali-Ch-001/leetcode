@@ -71,4 +71,24 @@ Constraints:
 
 class Solution:
     def isScramble(self, s1: str, s2: str) -> bool:
-        
+        memo = {}
+
+        def helper(a: str, b: str) -> bool:
+            if a == b:
+                return True
+            if len(a) != len(b) or sorted(a) != sorted(b):
+                return False
+            key = (a, b)
+            if key in memo:
+                return memo[key]
+            n = len(a)
+            for i in range(1, n):
+                if (helper(a[:i], b[:i]) and helper(a[i:], b[i:])) or (
+                    helper(a[:i], b[n - i:]) and helper(a[i:], b[:n - i])
+                ):
+                    memo[key] = True
+                    return True
+            memo[key] = False
+            return False
+
+        return helper(s1, s2)

@@ -39,4 +39,10 @@ Constraints:
 #         self.next = next
 class Solution:
     def deleteDuplicates(self, head: ListNode | None) -> ListNode | None:
-        
+        node = head
+        while node and node.next:
+            if node.next.val == node.val:
+                node.next = node.next.next
+            else:
+                node = node.next
+        return head

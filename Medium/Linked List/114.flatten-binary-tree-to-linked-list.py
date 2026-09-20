@@ -53,7 +53,13 @@ Follow up: Can you flatten the tree in-place (with O(1) extra space)?
 #         self.right = right
 class Solution:
     def flatten(self, root: TreeNode | None) -> None:
-        """
-        Do not return anything, modify root in-place instead.
-        """
-        
+        node = root
+        while node:
+            if node.left:
+                rightmost = node.left
+                while rightmost.right:
+                    rightmost = rightmost.right
+                rightmost.right = node.right
+                node.right = node.left
+                node.left = None
+            node = node.right

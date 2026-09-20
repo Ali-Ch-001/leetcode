@@ -53,4 +53,28 @@ Follow up: Could you find an algorithm that runs in O(m + n) time?
 
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
-        
+        if not t or not s:
+            return ""
+        need = {}
+        for ch in t:
+            need[ch] = need.get(ch, 0) + 1
+        missing = len(t)
+        best_left = best_right = 0
+        best_len = float("inf")
+        left = 0
+        for right, ch in enumerate(s):
+            if ch in need:
+                if need[ch] > 0:
+                    missing -= 1
+                need[ch] -= 1
+            while missing == 0:
+                if right - left + 1 < best_len:
+                    best_left, best_right = left, right
+                    best_len = right - left + 1
+                left_ch = s[left]
+                if left_ch in need:
+                    need[left_ch] += 1
+                    if need[left_ch] > 0:
+                        missing += 1
+                left += 1
+        return s[best_left:best_right + 1] if best_len != float("inf") else ""

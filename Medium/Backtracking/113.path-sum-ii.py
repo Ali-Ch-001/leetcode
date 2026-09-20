@@ -52,4 +52,18 @@ Constraints:
 #         self.right = right
 class Solution:
     def pathSum(self, root: TreeNode | None, targetSum: int) -> list[list[int]]:
-        
+        results = []
+
+        def dfs(node: TreeNode | None, remaining: int, path: list[int]) -> None:
+            if not node:
+                return
+            path.append(node.val)
+            if not node.left and not node.right and node.val == remaining:
+                results.append(path[:])
+            else:
+                dfs(node.left, remaining - node.val, path)
+                dfs(node.right, remaining - node.val, path)
+            path.pop()
+
+        dfs(root, targetSum, [])
+        return results

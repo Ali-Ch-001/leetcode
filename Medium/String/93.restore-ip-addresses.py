@@ -46,4 +46,27 @@ Constraints:
 
 class Solution:
     def restoreIpAddresses(self, s: str) -> list[str]:
-        
+        results = []
+
+        def backtrack(start: int, parts: list[str]) -> None:
+            if len(parts) == 4:
+                if start == len(s):
+                    results.append(".".join(parts))
+                return
+            if len(s) - start > (4 - len(parts)) * 3:
+                return
+            for size in range(1, 4):
+                if start + size > len(s):
+                    break
+                piece = s[start:start + size]
+                if len(piece) > 1 and piece[0] == "0":
+                    break
+                if int(piece) <= 255:
+                    parts.append(piece)
+                    backtrack(start + size, parts)
+                    parts.pop()
+                else:
+                    break
+
+        backtrack(0, [])
+        return results

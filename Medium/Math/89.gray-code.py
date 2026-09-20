@@ -54,4 +54,8 @@ Constraints:
 
 class Solution:
     def grayCode(self, n: int) -> list[int]:
-        
+        result = [0]
+        for i in range(n):
+            bit = 1 << i
+            result += [value + bit for value in reversed(result)]
+        return result

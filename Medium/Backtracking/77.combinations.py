@@ -37,4 +37,18 @@ Constraints:
 
 class Solution:
     def combine(self, n: int, k: int) -> list[list[int]]:
-        
+        results = []
+
+        def backtrack(start: int, path: list[int]) -> None:
+            if len(path) == k:
+                results.append(path[:])
+                return
+            for value in range(start, n + 1):
+                if n - value + 1 < k - len(path):
+                    break
+                path.append(value)
+                backtrack(value + 1, path)
+                path.pop()
+
+        backtrack(1, [])
+        return results

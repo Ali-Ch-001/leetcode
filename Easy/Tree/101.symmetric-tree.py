@@ -41,4 +41,14 @@ Follow up: Could you solve it both recursively and iteratively?
 #         self.right = right
 class Solution:
     def isSymmetric(self, root: TreeNode | None) -> bool:
-        
+        if not root:
+            return True
+
+        def mirror(a: TreeNode | None, b: TreeNode | None) -> bool:
+            if not a and not b:
+                return True
+            if not a or not b or a.val != b.val:
+                return False
+            return mirror(a.left, b.right) and mirror(a.right, b.left)
+
+        return mirror(root.left, root.right)

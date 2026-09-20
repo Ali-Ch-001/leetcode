@@ -41,4 +41,19 @@ Constraints:
 #         self.next = next
 class Solution:
     def partition(self, head: ListNode | None, x: int) -> ListNode | None:
-        
+        less_dummy = ListNode()
+        greater_dummy = ListNode()
+        less = less_dummy
+        greater = greater_dummy
+        node = head
+        while node:
+            if node.val < x:
+                less.next = node
+                less = node
+            else:
+                greater.next = node
+                greater = node
+            node = node.next
+        greater.next = None
+        less.next = greater_dummy.next
+        return less_dummy.next

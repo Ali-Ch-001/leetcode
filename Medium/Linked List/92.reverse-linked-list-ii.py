@@ -45,4 +45,14 @@ Follow up: Could you do it in one pass?
 #         self.next = next
 class Solution:
     def reverseBetween(self, head: ListNode | None, left: int, right: int) -> ListNode | None:
-        
+        dummy = ListNode(next=head)
+        before = dummy
+        for _ in range(left - 1):
+            before = before.next
+        prev = None
+        node = before.next
+        for _ in range(right - left + 1):
+            node.next, prev, node = prev, node, node.next
+        before.next.next = node
+        before.next = prev
+        return dummy.next

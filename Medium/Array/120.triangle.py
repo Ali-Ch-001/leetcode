@@ -51,4 +51,8 @@ the total number of rows in the triangle?
 
 class Solution:
     def minimumTotal(self, triangle: list[list[int]]) -> int:
-        
+        dp = triangle[-1][:]
+        for row in range(len(triangle) - 2, -1, -1):
+            for c in range(row + 1):
+                dp[c] = triangle[row][c] + min(dp[c], dp[c + 1])
+        return dp[0]

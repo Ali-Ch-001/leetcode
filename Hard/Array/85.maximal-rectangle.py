@@ -42,4 +42,22 @@ Constraints:
 
 class Solution:
     def maximalRectangle(self, matrix: list[list[str]]) -> int:
-        
+        if not matrix:
+            return 0
+        cols = len(matrix[0])
+        heights = [0] * cols
+        best = 0
+        for row in matrix:
+            for c in range(cols):
+                heights[c] = heights[c] + 1 if row[c] == "1" else 0
+            stack = []
+            for i, height in enumerate(heights):
+                start = i
+                while stack and stack[-1][1] > height:
+                    index, h = stack.pop()
+                    best = max(best, h * (i - index))
+                    start = index
+                stack.append((start, height))
+            for index, h in stack:
+                best = max(best, h * (cols - index))
+        return best

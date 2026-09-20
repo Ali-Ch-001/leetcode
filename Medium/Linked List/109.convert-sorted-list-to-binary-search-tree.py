@@ -44,4 +44,16 @@ Constraints:
 #         self.right = right
 class Solution:
     def sortedListToBST(self, head: ListNode | None) -> TreeNode | None:
-        
+        def build(first: ListNode | None, last: ListNode | None) -> TreeNode | None:
+            if first is last:
+                return None
+            slow = fast = first
+            while fast is not last and fast.next is not last:
+                slow = slow.next
+                fast = fast.next.next
+            root = TreeNode(slow.val)
+            root.left = build(first, slow)
+            root.right = build(slow.next, last)
+            return root
+
+        return build(head, None)

@@ -50,6 +50,17 @@ Constraints:
 	• 1 <= k <= n!
 """
 
+import math
+
+
 class Solution:
     def getPermutation(self, n: int, k: int) -> str:
-        
+        digits = [str(d) for d in range(1, n + 1)]
+        k -= 1
+        result = []
+        for remaining in range(n, 0, -1):
+            block = math.factorial(remaining - 1)
+            index = k // block
+            k %= block
+            result.append(digits.pop(index))
+        return "".join(result)

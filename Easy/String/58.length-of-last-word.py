@@ -43,4 +43,10 @@ Constraints:
 
 class Solution:
     def lengthOfLastWord(self, s: str) -> int:
-        
+        length = 0
+        for ch in reversed(s):
+            if ch != " ":
+                length += 1
+            elif length:
+                break
+        return length

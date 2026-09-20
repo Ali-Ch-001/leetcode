@@ -66,4 +66,18 @@ class Node:
 
 class Solution:
     def connect(self, root: 'Node') -> 'Node':
-        
+        node = root
+        while node:
+            dummy = Node()
+            tail = dummy
+            current = node
+            while current:
+                if current.left:
+                    tail.next = current.left
+                    tail = tail.next
+                if current.right:
+                    tail.next = current.right
+                    tail = tail.next
+                current = current.next
+            node = dummy.next
+        return root

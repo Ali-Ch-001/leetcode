@@ -92,4 +92,28 @@ Constraints:
 
 class Solution:
     def fullJustify(self, words: list[str], maxWidth: int) -> list[str]:
-        
+        lines = []
+        current = []
+        current_len = 0
+        for word in words:
+            if current_len + len(current) + len(word) > maxWidth:
+                lines.append(self._justify(current, current_len, maxWidth))
+                current = []
+                current_len = 0
+            current.append(word)
+            current_len += len(word)
+        last = " ".join(current)
+        lines.append(last + " " * (maxWidth - len(last)))
+        return lines
+
+    def _justify(self, words: list[str], words_len: int, maxWidth: int) -> str:
+        gaps = len(words) - 1
+        if gaps == 0:
+            return words[0] + " " * (maxWidth - words_len)
+        total_spaces = maxWidth - words_len
+        base, extra = divmod(total_spaces, gaps)
+        parts = []
+        for i, word in enumerate(words[:-1]):
+            parts.append(word + " " * (base + (1 if i < extra else 0)))
+        parts.append(words[-1])
+        return "".join(parts)

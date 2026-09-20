@@ -32,4 +32,9 @@ Constraints:
 
 class Solution:
     def generate(self, numRows: int) -> list[list[int]]:
-        
+        triangle = [[1]]
+        for _ in range(numRows - 1):
+            previous = triangle[-1]
+            row = [1] + [previous[i] + previous[i + 1] for i in range(len(previous) - 1)] + [1]
+            triangle.append(row)
+        return triangle
