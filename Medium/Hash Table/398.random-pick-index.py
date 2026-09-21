@@ -55,17 +55,12 @@ import random
 class Solution:
 
     def __init__(self, nums: list[int]):
-        self.nums = nums
+        self.positions = {}
+        for i, value in enumerate(nums):
+            self.positions.setdefault(value, []).append(i)
 
     def pick(self, target: int) -> int:
-        result = -1
-        count = 0
-        for i, value in enumerate(self.nums):
-            if value == target:
-                count += 1
-                if random.randint(1, count) == 1:
-                    result = i
-        return result
+        return random.choice(self.positions[target])
 
 
 # Your Solution object will be instantiated and called as such:
