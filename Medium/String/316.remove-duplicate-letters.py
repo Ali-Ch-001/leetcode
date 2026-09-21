@@ -1,0 +1,50 @@
+"""
+316. Remove Duplicate Letters
+Difficulty: Medium
+https://leetcode.com/problems/remove-duplicate-letters/
+
+──────────────────────────────────────────────────
+
+Given a string s, remove duplicate letters so that every letter
+appears once and only once. You must make sure your result is the
+smallest in lexicographical order among all possible results.
+
+ 
+
+Example 1:
+
+Input: s = "bcabc"
+Output: "abc"
+
+Example 2:
+
+Input: s = "cbacdcbc"
+Output: "acdb"
+
+ 
+
+Constraints:
+
+	• 1 <= s.length <= 10^4
+
+	• s consists of lowercase English letters.
+
+ 
+
+Note: This question is the same as 1081:
+https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/
+"""
+
+class Solution:
+    def removeDuplicateLetters(self, s: str) -> str:
+        last = {ch: i for i, ch in enumerate(s)}
+        stack = []
+        used = set()
+        for i, ch in enumerate(s):
+            if ch in used:
+                continue
+            while stack and stack[-1] > ch and last[stack[-1]] > i:
+                used.discard(stack.pop())
+            stack.append(ch)
+            used.add(ch)
+        return "".join(stack)

@@ -1,0 +1,59 @@
+"""
+221. Maximal Square
+Difficulty: Medium
+https://leetcode.com/problems/maximal-square/
+
+──────────────────────────────────────────────────
+
+Given an m x n binary matrix filled with 0's and 1's, find the
+largest square containing only 1's and return its area.
+
+ 
+
+Example 1:
+
+Input: matrix =
+[["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+Output: 4
+
+Example 2:
+
+Input: matrix = [["0","1"],["1","0"]]
+Output: 1
+
+Example 3:
+
+Input: matrix = [["0"]]
+Output: 0
+
+ 
+
+Constraints:
+
+	• m == matrix.length
+
+	• n == matrix[i].length
+
+	• 1 <= m, n <= 300
+
+	• matrix[i][j] is '0' or '1'.
+"""
+
+class Solution:
+    def maximalSquare(self, matrix: list[list[str]]) -> int:
+        if not matrix:
+            return 0
+        cols = len(matrix[0])
+        dp = [0] * (cols + 1)
+        best = 0
+        for row in matrix:
+            previous = 0
+            for c in range(1, cols + 1):
+                temp = dp[c]
+                if row[c - 1] == "1":
+                    dp[c] = min(dp[c], dp[c - 1], previous) + 1
+                    best = max(best, dp[c])
+                else:
+                    dp[c] = 0
+                previous = temp
+        return best * best
