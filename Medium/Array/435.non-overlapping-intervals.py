@@ -48,4 +48,14 @@ Constraints:
 
 class Solution:
     def eraseOverlapIntervals(self, intervals: list[list[int]]) -> int:
-        
+        if not intervals:
+            return 0
+        intervals.sort(key=lambda pair: pair[1])
+        count = 0
+        end = intervals[0][1]
+        for start, finish in intervals[1:]:
+            if start < end:
+                count += 1
+            else:
+                end = finish
+        return count

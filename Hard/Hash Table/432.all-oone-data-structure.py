@@ -67,19 +67,42 @@ getMinKey.
 class AllOne:
 
     def __init__(self):
-        
+        self.counts = {}
+        self.buckets = {}
+
+    def _set(self, key: str, new_count: int) -> None:
+        old = self.counts.get(key, 0)
+        if old:
+            bucket = self.buckets[old]
+            bucket.discard(key)
+            if not bucket:
+                del self.buckets[old]
+        self.counts[key] = new_count
+        self.buckets.setdefault(new_count, set()).add(key)
 
     def inc(self, key: str) -> None:
-        
+        self._set(key, self.counts.get(key, 0) + 1)
 
     def dec(self, key: str) -> None:
-        
+        new_count = self.counts[key] - 1
+        if new_count == 0:
+            old = self.counts.pop(key)
+            bucket = self.buckets[old]
+            bucket.discard(key)
+            if not bucket:
+                del self.buckets[old]
+        else:
+            self._set(key, new_count)
 
     def getMaxKey(self) -> str:
-        
+        if not self.buckets:
+            return ""
+        return next(iter(self.buckets[max(self.buckets)]))
 
     def getMinKey(self) -> str:
-        
+        if not self.buckets:
+            return ""
+        return next(iter(self.buckets[min(self.buckets)]))
 
 
 # Your AllOne object will be instantiated and called as such:
