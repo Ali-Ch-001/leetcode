@@ -84,50 +84,50 @@ Constraints:
 three or more consecutive balls of the same color.
 """
 
-from collections import Counter
+from collections import deque
 
 
 class Solution:
     def findMinStep(self, board: str, hand: str) -> int:
-        hand_counts = Counter(hand)
+        def shrink(state: str) -> str:
+            while True:
+                changed = False
+                out = []
+                i = 0
+                while i < len(state):
+                    j = i
+                    while j < len(state) and state[j] == state[i]:
+                        j += 1
+                    if j - i >= 3:
+                        changed = True
+                    else:
+                        out.append(state[i:j])
+                    i = j
+                state = "".join(out)
+                if not changed:
+                    return state
 
-        def clean(board: str) -> str:
-            result = []
-            i = 0
-            while i < len(board):
-                j = i
-                while j < len(board) and board[j] == board[i]:
-                    j += 1
-                if j - i < 3:
-                    result.append(board[i:j])
-                i = j
-            cleaned = "".join(result)
-            return clean(cleaned) if cleaned != board else cleaned
-
-        memo = {}
-
-        def dfs(board: str, hand: Counter) -> int:
-            board = clean(board)
-            if not board:
-                return 0
-            key = (board, tuple(sorted(hand.items())))
-            if key in memo:
-                return memo[key]
-            best = float("inf")
-            i = 0
-            while i < len(board):
-                j = i
-                while j < len(board) and board[j] == board[i]:
-                    j += 1
-                run = j - i
-                needed = 3 - run
-                if hand[board[i]] >= needed:
-                    hand[board[i]] -= needed
-                    best = min(best, needed + dfs(board[:i] + board[j:], hand))
-                    hand[board[i]] += needed
-                i = j
-            memo[key] = best
-            return best
-
-        result = dfs(board, hand_counts)
-        return result if result != float("inf") else -1
+        hand_sorted = "".join(sorted(hand))
+        queue = deque([(board, hand_sorted, 0)])
+        seen = {(shrink(board), hand_sorted)}
+        while queue:
+            current, remaining, steps = queue.popleft()
+            current = shrink(current)
+            if not current:
+                return steps
+            for index in range(len(remaining)):
+                if index > 0 and remaining[index] == remaining[index - 1]:
+                    continue
+                color = remaining[index]
+                new_hand = remaining[:index] + remaining[index + 1:]
+                results = set()
+                for position in range(len(current) + 1):
+                    new_board = shrink(current[:position] + color + current[position:])
+                    if new_board in results:
+                        continue
+                    results.add(new_board)
+                    state = (new_board, new_hand)
+                    if state not in seen:
+                        seen.add(state)
+                        queue.append((new_board, new_hand, steps + 1))
+        return -1
