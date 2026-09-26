@@ -47,23 +47,43 @@ Constraints:
 	• 1 <= boxes[i] <= 100
 """
 
+import sys
+from bisect import bisect_right
+from functools import lru_cache
+
+
 class Solution:
     def removeBoxes(self, boxes: list[int]) -> int:
-        memo = {}
+        sys.setrecursionlimit(10000)
+        colors = []
+        counts = []
+        for value in boxes:
+            if colors and colors[-1] == value:
+                counts[-1] += 1
+            else:
+                colors.append(value)
+                counts.append(1)
+        n = len(colors)
+        positions = {}
+        for index, color in enumerate(colors):
+            positions.setdefault(color, []).append(index)
 
-        def dp(left: int, right: int, streak: int) -> int:
-            if left > right:
+        @lru_cache(maxsize=None)
+        def dp(i: int, j: int, k: int) -> int:
+            if i > j:
                 return 0
-            if (left, right, streak) in memo:
-                return memo[(left, right, streak)]
-            while left < right and boxes[right] == boxes[right - 1]:
-                right -= 1
-                streak += 1
-            best = (streak + 1) ** 2 + dp(left, right - 1, 0)
-            for i in range(left, right):
-                if boxes[i] == boxes[right]:
-                    best = max(best, dp(left, i, streak + 1) + dp(i + 1, right - 1, 0))
-            memo[(left, right, streak)] = best
+            best = (counts[i] + k) ** 2 + dp(i + 1, j, 0)
+            lst = positions[colors[i]]
+            start = bisect_right(lst, i)
+            for idx in range(start, len(lst)):
+                m = lst[idx]
+                if m > j:
+                    break
+                candidate = dp(i + 1, m - 1, 0) + dp(m, j, counts[i] + k)
+                if candidate > best:
+                    best = candidate
             return best
 
-        return dp(0, len(boxes) - 1, 0)
+        result = dp(0, n - 1, 0)
+        dp.cache_clear()
+        return result

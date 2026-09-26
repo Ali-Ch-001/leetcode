@@ -85,10 +85,12 @@ three or more consecutive balls of the same color.
 """
 
 from collections import deque
+from functools import lru_cache
 
 
 class Solution:
     def findMinStep(self, board: str, hand: str) -> int:
+        @lru_cache(maxsize=None)
         def shrink(state: str) -> str:
             while True:
                 changed = False
@@ -115,15 +117,24 @@ class Solution:
             current = shrink(current)
             if not current:
                 return steps
+            present = set(current)
             for index in range(len(remaining)):
                 if index > 0 and remaining[index] == remaining[index - 1]:
                     continue
                 color = remaining[index]
+                if color not in present:
+                    continue
                 new_hand = remaining[:index] + remaining[index + 1:]
+                positions = [i for i in range(len(current)) if current[i] == color]
+                positions += [
+                    i
+                    for i in range(1, len(current))
+                    if current[i - 1] == current[i] and current[i] != color
+                ]
                 results = set()
-                for position in range(len(current) + 1):
+                for position in sorted(set(positions)):
                     new_board = shrink(current[:position] + color + current[position:])
-                    if new_board in results:
+                    if new_board == current or new_board in results:
                         continue
                     results.add(new_board)
                     state = (new_board, new_hand)
