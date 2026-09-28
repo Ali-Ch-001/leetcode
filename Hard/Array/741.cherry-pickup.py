@@ -97,4 +97,4 @@ class Solution:
             return memo[key]
 
         result = dp(0, 0, 0)
-        return result if result != float("-inf") else -1
+        return max(result, 0)

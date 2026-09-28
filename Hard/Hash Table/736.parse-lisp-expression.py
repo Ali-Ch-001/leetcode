@@ -104,11 +104,13 @@ class Solution:
                     name = tokens.pop(0)
                     if tokens[0] == ")":
                         result = parse([name])
+                        tokens.pop(0)
                         env_stack.pop()
                         return result
                     value = parse(tokens)
                     env_stack[-1][name] = value
                 result = parse(tokens)
+                tokens.pop(0)
                 env_stack.pop()
                 return result
             if op == "add":
