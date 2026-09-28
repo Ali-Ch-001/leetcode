@@ -62,4 +62,10 @@ https://leetcode.com/problems/find-the-middle-index-in-array/
 
 class Solution:
     def pivotIndex(self, nums: list[int]) -> int:
-        
+        total = sum(nums)
+        left = 0
+        for i, value in enumerate(nums):
+            if left == total - left - value:
+                return i
+            left += value
+        return -1

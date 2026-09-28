@@ -55,4 +55,4 @@ Constraints:
 
 class Solution:
     def isIdealPermutation(self, nums: list[int]) -> bool:
-        
+        return all(abs(value - i) <= 1 for i, value in enumerate(nums))

@@ -56,4 +56,7 @@ Constraints:
 
 class Solution:
     def xorGame(self, nums: list[int]) -> bool:
-        
+        xor_all = 0
+        for value in nums:
+            xor_all ^= value
+        return xor_all == 0 or len(nums) % 2 == 0

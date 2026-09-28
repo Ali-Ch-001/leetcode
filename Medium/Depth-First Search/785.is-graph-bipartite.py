@@ -66,4 +66,19 @@ Constraints:
 
 class Solution:
     def isBipartite(self, graph: list[list[int]]) -> bool:
-        
+        n = len(graph)
+        colors = [0] * n
+        for start in range(n):
+            if colors[start]:
+                continue
+            colors[start] = 1
+            stack = [start]
+            while stack:
+                node = stack.pop()
+                for neighbor in graph[node]:
+                    if colors[neighbor] == 0:
+                        colors[neighbor] = -colors[node]
+                        stack.append(neighbor)
+                    elif colors[neighbor] == colors[node]:
+                        return False
+        return True

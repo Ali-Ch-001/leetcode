@@ -110,4 +110,63 @@ Constraints:
 
 class Solution:
     def basicCalculatorIV(self, expression: str, evalvars: list[str], evalints: list[int]) -> list[str]:
-        
+        evaldict = dict(zip(evalvars, evalints))
+
+        def add(a, b):
+            result = dict(a)
+            for key, value in b.items():
+                result[key] = result.get(key, 0) + value
+            return result
+
+        def sub(a, b):
+            result = dict(a)
+            for key, value in b.items():
+                result[key] = result.get(key, 0) - value
+            return result
+
+        def mul(a, b):
+            result = {}
+            for key1, value1 in a.items():
+                for key2, value2 in b.items():
+                    key = tuple(sorted(key1 + key2))
+                    result[key] = result.get(key, 0) + value1 * value2
+            return result
+
+        tokens = expression.replace("(", " ( ").replace(")", " ) ").split()
+
+        def parse_expr(index):
+            terms, index = parse_term(index)
+            while index < len(tokens) and tokens[index] in "+-":
+                op = tokens[index]
+                other, index = parse_term(index + 1)
+                terms = add(terms, other) if op == "+" else sub(terms, other)
+            return terms, index
+
+        def parse_term(index):
+            factors, index = parse_factor(index)
+            while index < len(tokens) and tokens[index] == "*":
+                other, index = parse_factor(index + 1)
+                factors = mul(factors, other)
+            return factors, index
+
+        def parse_factor(index):
+            token = tokens[index]
+            if token == "(":
+                result, index = parse_expr(index + 1)
+                return result, index + 1
+            if token.isdigit():
+                return {(): int(token)}, index + 1
+            if token in evaldict:
+                return {(): evaldict[token]}, index + 1
+            return {(token,): 1}, index + 1
+
+        poly, _ = parse_expr(0)
+        terms = [(key, value) for key, value in poly.items() if value]
+        terms.sort(key=lambda item: (-len(item[0]), item[0]))
+        result = []
+        for key, value in terms:
+            if key:
+                result.append(str(value) + "*" + "*".join(key))
+            else:
+                result.append(str(value))
+        return result

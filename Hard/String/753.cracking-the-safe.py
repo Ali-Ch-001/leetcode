@@ -74,4 +74,16 @@ Constraints:
 
 class Solution:
     def crackSafe(self, n: int, k: int) -> str:
-        
+        visited = set()
+        result = []
+
+        def dfs(node):
+            for digit in range(k):
+                edge = node + str(digit)
+                if edge not in visited:
+                    visited.add(edge)
+                    dfs(edge[1:])
+                    result.append(str(digit))
+
+        dfs("0" * (n - 1))
+        return "".join(result) + "0" * (n - 1)

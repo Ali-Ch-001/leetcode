@@ -52,4 +52,23 @@ Constraints:
 
 class Solution:
     def bestRotation(self, nums: list[int]) -> int:
-        
+        n = len(nums)
+        diff = [0] * (n + 1)
+        for i, value in enumerate(nums):
+            if value <= i:
+                diff[0] += 1
+                diff[i - value + 1] -= 1
+            start = i + 1
+            end = min(i + n - value, n - 1)
+            if start <= end:
+                diff[start] += 1
+                diff[end + 1] -= 1
+        best = 0
+        current = 0
+        best_score = -1
+        for k in range(n):
+            current += diff[k]
+            if current > best_score:
+                best_score = current
+                best = k
+        return best

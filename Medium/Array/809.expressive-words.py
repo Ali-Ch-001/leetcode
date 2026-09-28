@@ -60,4 +60,29 @@ Constraints:
 
 class Solution:
     def expressiveWords(self, s: str, words: list[str]) -> int:
-        
+        def groups(text):
+            result = []
+            for ch in text:
+                if result and result[-1][0] == ch:
+                    result[-1][1] += 1
+                else:
+                    result.append([ch, 1])
+            return result
+
+        target = groups(s)
+        count = 0
+        for word in words:
+            source = groups(word)
+            if len(source) != len(target):
+                continue
+            ok = True
+            for (ch1, count1), (ch2, count2) in zip(source, target):
+                if ch1 != ch2:
+                    ok = False
+                    break
+                if count1 > count2 or (count1 < count2 and count2 < 3):
+                    ok = False
+                    break
+            if ok:
+                count += 1
+        return count

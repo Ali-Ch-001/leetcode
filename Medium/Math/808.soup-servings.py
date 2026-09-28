@@ -76,4 +76,27 @@ Constraints:
 
 class Solution:
     def soupServings(self, n: int) -> float:
-        
+        if n > 4800:
+            return 1.0
+        memo = {}
+
+        def probability(a, b):
+            if a <= 0 and b <= 0:
+                return 0.5
+            if a <= 0:
+                return 1.0
+            if b <= 0:
+                return 0.0
+            key = (a, b)
+            if key in memo:
+                return memo[key]
+            result = 0.25 * (
+                probability(a - 100, b)
+                + probability(a - 75, b - 25)
+                + probability(a - 50, b - 50)
+                + probability(a - 25, b - 75)
+            )
+            memo[key] = result
+            return result
+
+        return probability(n, n)

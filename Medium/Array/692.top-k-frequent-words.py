@@ -49,4 +49,7 @@ space?
 
 class Solution:
     def topKFrequent(self, words: list[str], k: int) -> list[str]:
-        
+        counts = {}
+        for word in words:
+            counts[word] = counts.get(word, 0) + 1
+        return sorted(counts, key=lambda word: (-counts[word], word))[:k]

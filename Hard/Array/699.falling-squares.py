@@ -65,4 +65,16 @@ Constraints:
 
 class Solution:
     def fallingSquares(self, positions: list[list[int]]) -> list[int]:
-        
+        intervals = []
+        result = []
+        best = 0
+        for left, size in positions:
+            right = left + size
+            height = size
+            for l, r, h in intervals:
+                if l < right and left < r:
+                    height = max(height, h + size)
+            intervals.append((left, right, height))
+            best = max(best, height)
+            result.append(best)
+        return result

@@ -67,6 +67,26 @@ Constraints:
 	• target and deadends[i] consist of digits only.
 """
 
+from collections import deque
+
+
 class Solution:
     def openLock(self, deadends: list[str], target: str) -> int:
-        
+        dead = set(deadends)
+        if "0000" in dead:
+            return -1
+        queue = deque([("0000", 0)])
+        visited = {"0000"}
+        while queue:
+            state, steps = queue.popleft()
+            if state == target:
+                return steps
+            for i in range(4):
+                digit = int(state[i])
+                for delta in (-1, 1):
+                    nxt_digit = (digit + delta) % 10
+                    nxt = state[:i] + str(nxt_digit) + state[i + 1:]
+                    if nxt not in visited and nxt not in dead:
+                        visited.add(nxt)
+                        queue.append((nxt, steps + 1))
+        return -1

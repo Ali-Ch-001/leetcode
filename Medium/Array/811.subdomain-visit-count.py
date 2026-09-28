@@ -61,4 +61,12 @@ Constraints:
 
 class Solution:
     def subdomainVisits(self, cpdomains: list[str]) -> list[str]:
-        
+        counts = {}
+        for entry in cpdomains:
+            number, domain = entry.split()
+            number = int(number)
+            parts = domain.split(".")
+            for i in range(len(parts)):
+                sub = ".".join(parts[i:])
+                counts[sub] = counts.get(sub, 0) + number
+        return [f"{count} {domain}" for domain, count in counts.items()]

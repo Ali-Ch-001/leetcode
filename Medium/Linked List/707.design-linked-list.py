@@ -74,22 +74,24 @@ addAtIndex and deleteAtIndex.
 class MyLinkedList:
 
     def __init__(self):
-        
+        self.values = []
 
     def get(self, index: int) -> int:
-        
+        return self.values[index] if 0 <= index < len(self.values) else -1
 
     def addAtHead(self, val: int) -> None:
-        
+        self.values.insert(0, val)
 
     def addAtTail(self, val: int) -> None:
-        
+        self.values.append(val)
 
     def addAtIndex(self, index: int, val: int) -> None:
-        
+        if 0 <= index <= len(self.values):
+            self.values.insert(index, val)
 
     def deleteAtIndex(self, index: int) -> None:
-        
+        if 0 <= index < len(self.values):
+            self.values.pop(index)
 
 
 # Your MyLinkedList object will be instantiated and called as such:

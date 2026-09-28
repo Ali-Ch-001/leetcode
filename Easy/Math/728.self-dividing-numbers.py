@@ -37,4 +37,11 @@ Constraints:
 
 class Solution:
     def selfDividingNumbers(self, left: int, right: int) -> list[int]:
-        
+        result = []
+        for value in range(left, right + 1):
+            digits = str(value)
+            if "0" in digits:
+                continue
+            if all(value % int(d) == 0 for d in digits):
+                result.append(value)
+        return result

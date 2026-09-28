@@ -55,4 +55,13 @@ Constraints:
 
 class Solution:
     def rotatedDigits(self, n: int) -> int:
-        
+        good = set("2569")
+        bad = set("347")
+        count = 0
+        for value in range(1, n + 1):
+            digits = set(str(value))
+            if digits & bad:
+                continue
+            if digits & good:
+                count += 1
+        return count

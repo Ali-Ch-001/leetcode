@@ -35,4 +35,10 @@ letters, and digits.
 
 class Solution:
     def letterCasePermutation(self, s: str) -> list[str]:
-        
+        results = [""]
+        for ch in s:
+            if ch.isalpha():
+                results = [prefix + c for prefix in results for c in (ch.lower(), ch.upper())]
+            else:
+                results = [prefix + ch for prefix in results]
+        return results

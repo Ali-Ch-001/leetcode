@@ -37,4 +37,5 @@ Constraints:
 
 class Solution:
     def hasAlternatingBits(self, n: int) -> bool:
-        
+        value = n ^ (n >> 1)
+        return value & (value + 1) == 0

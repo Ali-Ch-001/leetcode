@@ -42,4 +42,17 @@ https://leetcode.com/problems/minimum-absolute-difference-in-bst/
 #         self.right = right
 class Solution:
     def minDiffInBST(self, root: TreeNode | None) -> int:
-        
+        stack = []
+        node = root
+        previous = None
+        best = float("inf")
+        while node or stack:
+            while node:
+                stack.append(node)
+                node = node.left
+            node = stack.pop()
+            if previous is not None:
+                best = min(best, node.val - previous)
+            previous = node.val
+            node = node.right
+        return best

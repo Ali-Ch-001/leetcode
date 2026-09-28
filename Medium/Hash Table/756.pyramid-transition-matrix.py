@@ -67,4 +67,31 @@ Constraints:
 
 class Solution:
     def pyramidTransition(self, bottom: str, allowed: list[str]) -> bool:
-        
+        patterns = {}
+        for pattern in allowed:
+            patterns.setdefault(pattern[:2], []).append(pattern[2])
+
+        memo = {}
+
+        def build(row):
+            if len(row) == 1:
+                return True
+            if row in memo:
+                return memo[row]
+            options = [patterns.get(row[i:i + 2], []) for i in range(len(row) - 1)]
+            if any(not option for option in options):
+                memo[row] = False
+                return False
+
+            def generate(index, current):
+                if index == len(options):
+                    return build(current)
+                for ch in options[index]:
+                    if generate(index + 1, current + ch):
+                        return True
+                return False
+
+            memo[row] = generate(0, "")
+            return memo[row]
+
+        return build(bottom)

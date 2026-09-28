@@ -52,4 +52,33 @@ Constraints:
 
 class Solution:
     def findRedundantDirectedConnection(self, edges: list[list[int]]) -> list[int]:
-        
+        n = len(edges)
+        parents = list(range(n + 1))
+        first = second = None
+        for i, (u, v) in enumerate(edges):
+            if parents[v] != v:
+                first = [parents[v], v]
+                second = [u, v]
+                edges[i] = None
+                break
+            parents[v] = u
+
+        parents = list(range(n + 1))
+
+        def find(x):
+            while parents[x] != x:
+                parents[x] = parents[parents[x]]
+                x = parents[x]
+            return x
+
+        for edge in edges:
+            if edge is None:
+                continue
+            u, v = edge
+            root_u, root_v = find(u), find(v)
+            if root_u == root_v:
+                if first is not None:
+                    return first
+                return [u, v]
+            parents[root_v] = root_u
+        return second

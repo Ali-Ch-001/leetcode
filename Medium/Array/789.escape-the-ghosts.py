@@ -64,4 +64,5 @@ Constraints:
 
 class Solution:
     def escapeGhosts(self, ghosts: list[list[int]], target: list[int]) -> bool:
-        
+        distance = abs(target[0]) + abs(target[1])
+        return all(abs(gx - target[0]) + abs(gy - target[1]) > distance for gx, gy in ghosts)

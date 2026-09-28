@@ -89,4 +89,35 @@ Constraints:
 
 class Solution:
     def hitBricks(self, grid: list[list[int]], hits: list[list[int]]) -> list[int]:
-        
+        rows, cols = len(grid), len(grid[0])
+        for r, c in hits:
+            grid[r][c] -= 1
+
+        def count_stable():
+            stable = [[False] * cols for _ in range(rows)]
+            stack = []
+            for c in range(cols):
+                if grid[0][c] == 1:
+                    stable[0][c] = True
+                    stack.append((0, c))
+            total = 0
+            while stack:
+                r, c = stack.pop()
+                total += 1
+                for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1 and not stable[nr][nc]:
+                        stable[nr][nc] = True
+                        stack.append((nr, nc))
+            return total
+
+        before = count_stable()
+        result = []
+        for r, c in reversed(hits):
+            grid[r][c] += 1
+            if grid[r][c] == 1:
+                after = count_stable()
+                result.append(max(0, after - before - 1))
+                before = after
+            else:
+                result.append(0)
+        return result[::-1]

@@ -42,4 +42,21 @@ Constraints:
 
 class Solution:
     def preimageSizeFZF(self, k: int) -> int:
-        
+        def zeroes(n):
+            count = 0
+            while n:
+                n //= 5
+                count += n
+            return count
+
+        def first_ge(target):
+            lo, hi = 0, 5 * (target + 1)
+            while lo < hi:
+                mid = (lo + hi) // 2
+                if zeroes(mid) >= target:
+                    hi = mid
+                else:
+                    lo = mid + 1
+            return lo
+
+        return first_ge(k + 1) - first_ge(k)

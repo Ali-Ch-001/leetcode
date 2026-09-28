@@ -45,4 +45,13 @@ Constraints:
 
 class Solution:
     def findShortestSubArray(self, nums: list[int]) -> int:
-        
+        first = {}
+        last = {}
+        counts = {}
+        for i, value in enumerate(nums):
+            if value not in first:
+                first[value] = i
+            last[value] = i
+            counts[value] = counts.get(value, 0) + 1
+        degree = max(counts.values())
+        return min(last[value] - first[value] + 1 for value, count in counts.items() if count == degree)

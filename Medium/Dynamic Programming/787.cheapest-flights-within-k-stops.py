@@ -71,6 +71,25 @@ Constraints:
 	• src != dst
 """
 
+import heapq
+
+
 class Solution:
     def findCheapestPrice(self, n: int, flights: list[list[int]], src: int, dst: int, k: int) -> int:
-        
+        graph = {}
+        for from_city, to_city, price in flights:
+            graph.setdefault(from_city, []).append((to_city, price))
+        best = {}
+        heap = [(0, src, 0)]
+        while heap:
+            cost, city, stops = heapq.heappop(heap)
+            if city == dst:
+                return cost
+            if stops > k:
+                continue
+            if (city, stops) in best and best[(city, stops)] <= cost:
+                continue
+            best[(city, stops)] = cost
+            for neighbor, price in graph.get(city, []):
+                heapq.heappush(heap, (cost + price, neighbor, stops + 1))
+        return -1

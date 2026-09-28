@@ -51,4 +51,13 @@ Constraints:
 
 class Solution:
     def kthGrammar(self, n: int, k: int) -> int:
-        
+        result = 0
+        left, right = 1, 2 ** (n - 1)
+        while left < right:
+            mid = (left + right) // 2
+            if k > mid:
+                result ^= 1
+                left = mid + 1
+            else:
+                right = mid
+        return result

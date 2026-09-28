@@ -91,4 +91,36 @@ integer.
 
 class Solution:
     def evaluate(self, expression: str) -> int:
-        
+        def parse(tokens):
+            token = tokens.pop(0)
+            if token != "(":
+                if token.lstrip("-").isdigit():
+                    return int(token)
+                return env_stack[-1][token]
+            op = tokens.pop(0)
+            if op == "let":
+                env_stack.append(dict(env_stack[-1]))
+                while tokens[0] != "(":
+                    name = tokens.pop(0)
+                    if tokens[0] == ")":
+                        result = parse([name])
+                        env_stack.pop()
+                        return result
+                    value = parse(tokens)
+                    env_stack[-1][name] = value
+                result = parse(tokens)
+                env_stack.pop()
+                return result
+            if op == "add":
+                a = parse(tokens)
+                b = parse(tokens)
+                tokens.pop(0)
+                return a + b
+            a = parse(tokens)
+            b = parse(tokens)
+            tokens.pop(0)
+            return a * b
+
+        tokens = expression.replace("(", " ( ").replace(")", " ) ").split()
+        env_stack = [{}]
+        return parse(tokens)

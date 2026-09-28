@@ -70,4 +70,12 @@ class Employee:
 
 class Solution:
     def getImportance(self, employees: List['Employee'], id: int) -> int:
-        
+        lookup = {employee.id: employee for employee in employees}
+        total = 0
+        stack = [id]
+        while stack:
+            current = stack.pop()
+            employee = lookup[current]
+            total += employee.importance
+            stack.extend(employee.subordinates)
+        return total

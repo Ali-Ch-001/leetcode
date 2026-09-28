@@ -56,6 +56,32 @@ Constraints:
 	• stickers[i] and target consist of lowercase English letters.
 """
 
+from collections import Counter
+
+
 class Solution:
     def minStickers(self, stickers: list[str], target: str) -> int:
-        
+        memo = {}
+
+        def solve(remaining: str) -> int:
+            if not remaining:
+                return 0
+            if remaining in memo:
+                return memo[remaining]
+            counts = Counter(remaining)
+            best = float("inf")
+            for sticker in stickers:
+                if remaining[0] not in sticker:
+                    continue
+                sticker_count = Counter(sticker)
+                nxt = []
+                for ch, need in counts.items():
+                    leftover = need - sticker_count.get(ch, 0)
+                    if leftover > 0:
+                        nxt.append(ch * leftover)
+                best = min(best, 1 + solve("".join(nxt)))
+            memo[remaining] = best
+            return best
+
+        result = solve(target)
+        return result if result != float("inf") else -1

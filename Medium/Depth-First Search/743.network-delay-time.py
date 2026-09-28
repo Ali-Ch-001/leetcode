@@ -50,6 +50,22 @@ Constraints:
 	• All the pairs (ui, vi) are unique. (i.e., no multiple edges.)
 """
 
+import heapq
+
+
 class Solution:
     def networkDelayTime(self, times: list[list[int]], n: int, k: int) -> int:
-        
+        graph = {}
+        for u, v, w in times:
+            graph.setdefault(u, []).append((v, w))
+        distances = {}
+        heap = [(0, k)]
+        while heap:
+            distance, node = heapq.heappop(heap)
+            if node in distances:
+                continue
+            distances[node] = distance
+            for neighbor, weight in graph.get(node, []):
+                if neighbor not in distances:
+                    heapq.heappush(heap, (distance + weight, neighbor))
+        return max(distances.values()) if len(distances) == n else -1

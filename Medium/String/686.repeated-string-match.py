@@ -38,4 +38,8 @@ Constraints:
 
 class Solution:
     def repeatedStringMatch(self, a: str, b: str) -> int:
-        
+        times = (len(b) + len(a) - 1) // len(a)
+        for count in (times, times + 1):
+            if b in a * count:
+                return count
+        return -1

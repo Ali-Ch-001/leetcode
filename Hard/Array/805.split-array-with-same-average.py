@@ -38,6 +38,26 @@ Constraints:
 	• 0 <= nums[i] <= 10^4
 """
 
+from functools import lru_cache
+
+
 class Solution:
     def splitArraySameAverage(self, nums: list[int]) -> bool:
-        
+        n = len(nums)
+        total = sum(nums)
+        nums.sort()
+
+        @lru_cache(maxsize=None)
+        def can_pick(index, count, remaining):
+            if count == 0:
+                return remaining == 0
+            if index == n or remaining < 0 or count > n - index:
+                return False
+            return can_pick(index + 1, count - 1, remaining - nums[index]) or can_pick(
+                index + 1, count, remaining
+            )
+
+        for count in range(1, n):
+            if total * count % n == 0 and can_pick(0, count, total * count // n):
+                return True
+        return False

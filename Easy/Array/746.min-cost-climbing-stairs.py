@@ -50,4 +50,7 @@ Constraints:
 
 class Solution:
     def minCostClimbingStairs(self, cost: list[int]) -> int:
-        
+        previous = current = 0
+        for value in cost:
+            previous, current = current, value + min(previous, current)
+        return min(previous, current)

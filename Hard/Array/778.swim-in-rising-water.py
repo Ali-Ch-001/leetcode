@@ -56,6 +56,20 @@ Constraints:
 	• Each value grid[i][j] is unique.
 """
 
+import heapq
+
+
 class Solution:
     def swimInWater(self, grid: list[list[int]]) -> int:
-        
+        n = len(grid)
+        visited = {(0, 0)}
+        heap = [(grid[0][0], 0, 0)]
+        while heap:
+            time, r, c = heapq.heappop(heap)
+            if r == n - 1 and c == n - 1:
+                return time
+            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+                if 0 <= nr < n and 0 <= nc < n and (nr, nc) not in visited:
+                    visited.add((nr, nc))
+                    heapq.heappush(heap, (max(time, grid[nr][nc]), nr, nc))
+        return -1

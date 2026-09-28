@@ -63,4 +63,13 @@ Constraints:
 
 class Solution:
     def champagneTower(self, poured: int, query_row: int, query_glass: int) -> float:
-        
+        row = [float(poured)]
+        for _ in range(query_row):
+            nxt = [0.0] * (len(row) + 1)
+            for c, amount in enumerate(row):
+                overflow = (amount - 1) / 2
+                if overflow > 0:
+                    nxt[c] += overflow
+                    nxt[c + 1] += overflow
+            row = nxt
+        return min(1.0, row[query_glass])

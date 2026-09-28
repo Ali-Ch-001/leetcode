@@ -46,4 +46,12 @@ Constraints:
 
 class Solution:
     def numRabbits(self, answers: list[int]) -> int:
-        
+        counts = {}
+        for answer in answers:
+            counts[answer] = counts.get(answer, 0) + 1
+        total = 0
+        for answer, count in counts.items():
+            group_size = answer + 1
+            groups = (count + group_size - 1) // group_size
+            total += groups * group_size
+        return total

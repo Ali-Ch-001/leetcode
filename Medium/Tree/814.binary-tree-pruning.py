@@ -49,4 +49,15 @@ Constraints:
 #         self.right = right
 class Solution:
     def pruneTree(self, root: TreeNode | None) -> TreeNode | None:
-        
+        def dfs(node):
+            if not node:
+                return False
+            left = dfs(node.left)
+            right = dfs(node.right)
+            if not left:
+                node.left = None
+            if not right:
+                node.right = None
+            return node.val == 1 or left or right
+
+        return root if dfs(root) else None

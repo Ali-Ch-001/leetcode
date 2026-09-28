@@ -48,4 +48,18 @@ Constraints:
 
 class Solution:
     def largestSumOfAverages(self, nums: list[int], k: int) -> float:
-        
+        n = len(nums)
+        prefix = [0] * (n + 1)
+        for i, value in enumerate(nums):
+            prefix[i + 1] = prefix[i] + value
+        dp = [prefix[i] / i for i in range(1, n + 1)]
+        for _ in range(k - 1):
+            nxt = [0.0] * n
+            for i in range(n):
+                best = 0.0
+                for j in range(i):
+                    candidate = dp[j] + (prefix[i + 1] - prefix[j + 1]) / (i - j)
+                    best = max(best, candidate)
+                nxt[i] = best
+            dp = nxt
+        return dp[n - 1]

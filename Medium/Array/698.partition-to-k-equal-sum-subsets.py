@@ -36,4 +36,30 @@ Constraints:
 
 class Solution:
     def canPartitionKSubsets(self, nums: list[int], k: int) -> bool:
-        
+        total = sum(nums)
+        if total % k:
+            return False
+        target = total // k
+        nums.sort(reverse=True)
+        if nums[0] > target:
+            return False
+        groups = [0] * k
+
+        def backtrack(index):
+            if index == len(nums):
+                return True
+            seen = set()
+            for i in range(k):
+                if groups[i] in seen:
+                    continue
+                seen.add(groups[i])
+                if groups[i] + nums[index] <= target:
+                    groups[i] += nums[index]
+                    if backtrack(index + 1):
+                        return True
+                    groups[i] -= nums[index]
+                if groups[i] == 0:
+                    break
+            return False
+
+        return backtrack(0)

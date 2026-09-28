@@ -61,4 +61,29 @@ Constraints:
 
 class Solution:
     def validTicTacToe(self, board: list[str]) -> bool:
-        
+        count_x = sum(row.count("X") for row in board)
+        count_o = sum(row.count("O") for row in board)
+        if count_x != count_o and count_x != count_o + 1:
+            return False
+
+        def wins(player):
+            for i in range(3):
+                if board[i][0] == board[i][1] == board[i][2] == player:
+                    return True
+                if board[0][i] == board[1][i] == board[2][i] == player:
+                    return True
+            if board[0][0] == board[1][1] == board[2][2] == player:
+                return True
+            if board[0][2] == board[1][1] == board[2][0] == player:
+                return True
+            return False
+
+        x_wins = wins("X")
+        o_wins = wins("O")
+        if x_wins and o_wins:
+            return False
+        if x_wins and count_x != count_o + 1:
+            return False
+        if o_wins and count_x != count_o:
+            return False
+        return True

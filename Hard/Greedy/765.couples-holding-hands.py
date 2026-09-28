@@ -48,4 +48,16 @@ Constraints:
 
 class Solution:
     def minSwapsCouples(self, row: list[int]) -> int:
-        
+        position = {person: i for i, person in enumerate(row)}
+        swaps = 0
+        for i in range(0, len(row), 2):
+            first = row[i]
+            partner = first ^ 1
+            if row[i + 1] == partner:
+                continue
+            swaps += 1
+            j = position[partner]
+            row[i + 1], row[j] = row[j], row[i + 1]
+            position[row[i + 1]] = i + 1
+            position[row[j]] = j
+        return swaps

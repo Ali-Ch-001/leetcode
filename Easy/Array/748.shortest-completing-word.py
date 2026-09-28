@@ -66,4 +66,16 @@ space ' '.
 
 class Solution:
     def shortestCompletingWord(self, licensePlate: str, words: list[str]) -> str:
-        
+        need = {}
+        for ch in licensePlate.lower():
+            if ch.isalpha():
+                need[ch] = need.get(ch, 0) + 1
+        best = None
+        for word in words:
+            counts = {}
+            for ch in word.lower():
+                counts[ch] = counts.get(ch, 0) + 1
+            if all(counts.get(ch, 0) >= count for ch, count in need.items()):
+                if best is None or len(word) < len(best):
+                    best = word
+        return best

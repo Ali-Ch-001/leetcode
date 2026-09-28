@@ -53,4 +53,9 @@ Constraints:
 
 class Solution:
     def flipgame(self, fronts: list[int], backs: list[int]) -> int:
-        
+        same = {fronts[i] for i in range(len(fronts)) if fronts[i] == backs[i]}
+        best = float("inf")
+        for value in fronts + backs:
+            if value not in same:
+                best = min(best, value)
+        return best if best != float("inf") else 0

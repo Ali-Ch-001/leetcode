@@ -44,4 +44,19 @@ Constraints:
 
 class Solution:
     def maxChunksToSorted(self, arr: list[int]) -> int:
-        
+        n = len(arr)
+        max_left = [0] * n
+        min_right = [0] * n
+        current = float("-inf")
+        for i in range(n):
+            current = max(current, arr[i])
+            max_left[i] = current
+        current = float("inf")
+        for i in range(n - 1, -1, -1):
+            current = min(current, arr[i])
+            min_right[i] = current
+        chunks = 1
+        for i in range(n - 1):
+            if max_left[i] <= min_right[i + 1]:
+                chunks += 1
+        return chunks

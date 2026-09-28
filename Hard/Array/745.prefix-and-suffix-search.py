@@ -50,10 +50,14 @@ Constraints:
 class WordFilter:
 
     def __init__(self, words: list[str]):
-        
+        self.lookup = {}
+        for index, word in enumerate(words):
+            for i in range(len(word) + 1):
+                for j in range(len(word) + 1):
+                    self.lookup[word[i:] + "#" + word[:j]] = index
 
     def f(self, pref: str, suff: str) -> int:
-        
+        return self.lookup.get(suff + "#" + pref, -1)
 
 
 # Your WordFilter object will be instantiated and called as such:

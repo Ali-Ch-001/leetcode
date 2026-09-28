@@ -68,4 +68,37 @@ Constraints:
 
 class Solution:
     def countOfAtoms(self, formula: str) -> str:
-        
+        stack = [{}]
+        i = 0
+        n = len(formula)
+        while i < n:
+            ch = formula[i]
+            if ch == "(":
+                stack.append({})
+                i += 1
+            elif ch == ")":
+                i += 1
+                j = i
+                while j < n and formula[j].isdigit():
+                    j += 1
+                multiplier = int(formula[i:j]) if j > i else 1
+                i = j
+                top = stack.pop()
+                for element, count in top.items():
+                    stack[-1][element] = stack[-1].get(element, 0) + count * multiplier
+            else:
+                j = i + 1
+                while j < n and formula[j].islower():
+                    j += 1
+                element = formula[i:j]
+                k = j
+                while k < n and formula[k].isdigit():
+                    k += 1
+                count = int(formula[j:k]) if k > j else 1
+                stack[-1][element] = stack[-1].get(element, 0) + count
+                i = k
+        counts = stack[0]
+        return "".join(
+            element + (str(counts[element]) if counts[element] > 1 else "")
+            for element in sorted(counts)
+        )

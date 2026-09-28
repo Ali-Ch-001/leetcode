@@ -51,6 +51,10 @@ Constraints:
 	• target is a lowercase English letter.
 """
 
+import bisect
+
+
 class Solution:
     def nextGreatestLetter(self, letters: list[str], target: str) -> str:
-        
+        index = bisect.bisect_right(letters, target)
+        return letters[index % len(letters)]

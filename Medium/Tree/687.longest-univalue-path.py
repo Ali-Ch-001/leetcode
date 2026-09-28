@@ -47,4 +47,18 @@ Constraints:
 #         self.right = right
 class Solution:
     def longestUnivaluePath(self, root: TreeNode | None) -> int:
-        
+        best = 0
+
+        def dfs(node):
+            nonlocal best
+            if not node:
+                return 0
+            left = dfs(node.left)
+            right = dfs(node.right)
+            left_path = left + 1 if node.left and node.left.val == node.val else 0
+            right_path = right + 1 if node.right and node.right.val == node.val else 0
+            best = max(best, left_path + right_path)
+            return max(left_path, right_path)
+
+        dfs(root)
+        return best

@@ -53,6 +53,16 @@ symbols: "!?',;.".
 	• banned[i] consists of only lowercase English letters.
 """
 
+import re
+
+
 class Solution:
     def mostCommonWord(self, paragraph: str, banned: list[str]) -> str:
-        
+        banned_set = set(banned)
+        words = re.findall(r"[a-z]+", paragraph.lower())
+        counts = {}
+        for word in words:
+            if word in banned_set:
+                continue
+            counts[word] = counts.get(word, 0) + 1
+        return max(counts, key=counts.get)

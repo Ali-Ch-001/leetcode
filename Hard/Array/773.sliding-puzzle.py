@@ -56,6 +56,35 @@ Constraints:
 	• Each value board[i][j] is unique.
 """
 
+from collections import deque
+
+
 class Solution:
     def slidingPuzzle(self, board: list[list[int]]) -> int:
-        
+        start = "".join(str(value) for row in board for value in row)
+        target = "123450"
+        if start == target:
+            return 0
+        neighbors = {
+            0: [1, 3],
+            1: [0, 2, 4],
+            2: [1, 5],
+            3: [0, 4],
+            4: [1, 3, 5],
+            5: [2, 4],
+        }
+        queue = deque([(start, 0)])
+        visited = {start}
+        while queue:
+            state, steps = queue.popleft()
+            zero = state.index("0")
+            for swap in neighbors[zero]:
+                chars = list(state)
+                chars[zero], chars[swap] = chars[swap], chars[zero]
+                nxt = "".join(chars)
+                if nxt == target:
+                    return steps + 1
+                if nxt not in visited:
+                    visited.add(nxt)
+                    queue.append((nxt, steps + 1))
+        return -1

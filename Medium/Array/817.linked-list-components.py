@@ -55,4 +55,16 @@ Constraints:
 #         self.next = next
 class Solution:
     def numComponents(self, head: ListNode | None, nums: list[int]) -> int:
-        
+        values = set(nums)
+        count = 0
+        node = head
+        in_component = False
+        while node:
+            if node.val in values:
+                if not in_component:
+                    count += 1
+                    in_component = True
+            else:
+                in_component = False
+            node = node.next
+        return count

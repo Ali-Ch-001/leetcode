@@ -43,4 +43,19 @@ Constraints:
 
 class Solution:
     def numFactoredBinaryTrees(self, arr: list[int]) -> int:
-        
+        MOD = 10**9 + 7
+        arr.sort()
+        counts = {}
+        total = 0
+        for value in arr:
+            ways = 1
+            for factor in arr:
+                if factor * factor > value:
+                    break
+                if value % factor == 0:
+                    other = value // factor
+                    if other in counts:
+                        ways += counts[factor] * counts[other] * (1 if factor == other else 2)
+            counts[value] = ways % MOD
+            total = (total + ways) % MOD
+        return total

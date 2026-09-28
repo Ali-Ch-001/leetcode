@@ -40,4 +40,14 @@ Constraints:
 
 class Solution:
     def numSubarrayBoundedMax(self, nums: list[int], left: int, right: int) -> int:
-        
+        result = 0
+        start = -1
+        last_valid = -1
+        for i, value in enumerate(nums):
+            if value > right:
+                start = i
+                last_valid = i
+            elif value >= left:
+                last_valid = i
+            result += last_valid - start
+        return result

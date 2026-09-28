@@ -52,4 +52,9 @@ Constraints:
 
 class Solution:
     def maxProfit(self, prices: list[int], fee: int) -> int:
-        
+        held = float("-inf")
+        cash = 0
+        for price in prices:
+            held = max(held, cash - price)
+            cash = max(cash, held + price - fee)
+        return cash

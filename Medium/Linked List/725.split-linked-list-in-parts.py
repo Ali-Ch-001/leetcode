@@ -56,4 +56,24 @@ Constraints:
 #         self.next = next
 class Solution:
     def splitListToParts(self, head: ListNode | None, k: int) -> list[ListNode | None]:
-        
+        length = 0
+        node = head
+        while node:
+            length += 1
+            node = node.next
+        base, extra = divmod(length, k)
+        result = []
+        node = head
+        for i in range(k):
+            size = base + (1 if i < extra else 0)
+            if size == 0:
+                result.append(None)
+                continue
+            part_head = node
+            for _ in range(size - 1):
+                node = node.next
+            next_node = node.next
+            node.next = None
+            result.append(part_head)
+            node = next_node
+        return result

@@ -54,4 +54,14 @@ Constraints:
 
 class Solution:
     def knightProbability(self, n: int, k: int, row: int, column: int) -> float:
-        
+        moves = [(1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1), (-1, -2), (-2, -1)]
+        dp = {(row, column): 1.0}
+        for _ in range(k):
+            nxt = {}
+            for (r, c), probability in dp.items():
+                for dr, dc in moves:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < n and 0 <= nc < n:
+                        nxt[(nr, nc)] = nxt.get((nr, nc), 0.0) + probability / 8
+            dp = nxt
+        return sum(dp.values())

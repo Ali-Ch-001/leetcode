@@ -42,4 +42,8 @@ Constraints:
 
 class Solution:
     def dominantIndex(self, nums: list[int]) -> int:
-        
+        largest = max(nums)
+        index = nums.index(largest)
+        if all(value * 2 <= largest for i, value in enumerate(nums) if i != index):
+            return index
+        return -1

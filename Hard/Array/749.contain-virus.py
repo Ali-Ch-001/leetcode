@@ -73,4 +73,42 @@ next round.
 
 class Solution:
     def containVirus(self, isInfected: list[list[int]]) -> int:
-        
+        rows, cols = len(isInfected), len(isInfected[0])
+        total_walls = 0
+        while True:
+            visited = [[False] * cols for _ in range(rows)]
+            regions = []
+            for r in range(rows):
+                for c in range(cols):
+                    if isInfected[r][c] == 1 and not visited[r][c]:
+                        cells = []
+                        frontier = set()
+                        walls = 0
+                        stack = [(r, c)]
+                        visited[r][c] = True
+                        while stack:
+                            x, y = stack.pop()
+                            cells.append((x, y))
+                            for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                                if 0 <= nx < rows and 0 <= ny < cols:
+                                    if isInfected[nx][ny] == 1 and not visited[nx][ny]:
+                                        visited[nx][ny] = True
+                                        stack.append((nx, ny))
+                                    elif isInfected[nx][ny] == 0:
+                                        frontier.add((nx, ny))
+                                        walls += 1
+                        regions.append({"cells": cells, "frontier": frontier, "walls": walls})
+            if not regions:
+                break
+            if all(len(region["frontier"]) == 0 for region in regions):
+                break
+            target = max(regions, key=lambda region: len(region["frontier"]))
+            total_walls += target["walls"]
+            for x, y in target["cells"]:
+                isInfected[x][y] = -1
+            for region in regions:
+                if region is target:
+                    continue
+                for x, y in region["frontier"]:
+                    isInfected[x][y] = 1
+        return total_walls

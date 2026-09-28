@@ -42,6 +42,28 @@ Constraints:
 	• s and words[i] consist of only lowercase English letters.
 """
 
+import bisect
+
+
 class Solution:
     def numMatchingSubseq(self, s: str, words: list[str]) -> int:
-        
+        positions = {}
+        for i, ch in enumerate(s):
+            positions.setdefault(ch, []).append(i)
+        count = 0
+        for word in words:
+            index = -1
+            good = True
+            for ch in word:
+                lst = positions.get(ch)
+                if not lst:
+                    good = False
+                    break
+                spot = bisect.bisect_right(lst, index)
+                if spot == len(lst):
+                    good = False
+                    break
+                index = lst[spot]
+            if good:
+                count += 1
+        return count

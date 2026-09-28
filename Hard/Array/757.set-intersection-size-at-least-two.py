@@ -53,4 +53,18 @@ Constraints:
 
 class Solution:
     def intersectionSizeTwo(self, intervals: list[list[int]]) -> int:
-        
+        intervals.sort(key=lambda pair: (pair[1], -pair[0]))
+        selected = []
+        for start, end in intervals:
+            count = sum(1 for value in selected if start <= value <= end)
+            if count >= 2:
+                continue
+            if count == 1:
+                for value in range(end, start - 1, -1):
+                    if value not in selected:
+                        selected.append(value)
+                        break
+            else:
+                selected.append(end)
+                selected.append(end - 1)
+        return len(selected)

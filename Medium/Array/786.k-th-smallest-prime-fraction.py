@@ -54,6 +54,17 @@ Follow up: Can you solve the problem with better than O(n^2)
 complexity?
 """
 
+import heapq
+
+
 class Solution:
     def kthSmallestPrimeFraction(self, arr: list[int], k: int) -> list[int]:
-        
+        n = len(arr)
+        heap = [(arr[0] / arr[j], 0, j) for j in range(1, n)]
+        heapq.heapify(heap)
+        for _ in range(k - 1):
+            _, i, j = heapq.heappop(heap)
+            if i + 1 < j:
+                heapq.heappush(heap, (arr[i + 1] / arr[j], i + 1, j))
+        _, i, j = heapq.heappop(heap)
+        return [arr[i], arr[j]]

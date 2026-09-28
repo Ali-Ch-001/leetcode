@@ -61,4 +61,12 @@ Constraints:
 
 class Solution:
     def uniqueMorseRepresentations(self, words: list[str]) -> int:
-        
+        codes = [
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+            "..-", "...-", ".--", "-..-", "-.--", "--..",
+        ]
+        seen = set()
+        for word in words:
+            seen.add("".join(codes[ord(ch) - 97] for ch in word))
+        return len(seen)

@@ -51,10 +51,18 @@ Constraints:
 class MyCalendarThree:
 
     def __init__(self):
-        
+        self.events = []
 
     def book(self, startTime: int, endTime: int) -> int:
-        
+        self.events.append((startTime, 1))
+        self.events.append((endTime, -1))
+        self.events.sort()
+        best = 0
+        current = 0
+        for _, delta in self.events:
+            current += delta
+            best = max(best, current)
+        return best
 
 
 # Your MyCalendarThree object will be instantiated and called as such:

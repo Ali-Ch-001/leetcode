@@ -50,4 +50,18 @@ Constraints:
 
 class Solution:
     def deleteAndEarn(self, nums: list[int]) -> int:
-        
+        counts = {}
+        for value in nums:
+            counts[value] = counts.get(value, 0) + 1
+        points = {}
+        for value, count in counts.items():
+            points[value] = value * count
+        previous = current = 0
+        last = None
+        for value in sorted(points):
+            if last is not None and value == last + 1:
+                previous, current = current, max(current, previous + points[value])
+            else:
+                previous, current = current, current + points[value]
+            last = value
+        return current

@@ -45,4 +45,9 @@ Constraints:
 #         self.right = right
 class Solution:
     def searchBST(self, root: TreeNode | None, val: int) -> TreeNode | None:
-        
+        node = root
+        while node:
+            if node.val == val:
+                return node
+            node = node.left if val < node.val else node.right
+        return None

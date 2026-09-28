@@ -65,16 +65,45 @@ removeRange.
 class RangeModule:
 
     def __init__(self):
-        
+        self.intervals = []
 
     def addRange(self, left: int, right: int) -> None:
-        
+        merged = []
+        placed = False
+        for start, end in self.intervals:
+            if end < left:
+                merged.append([start, end])
+            elif start > right:
+                if not placed:
+                    merged.append([left, right])
+                    placed = True
+                merged.append([start, end])
+            else:
+                left = min(left, start)
+                right = max(right, end)
+        if not placed:
+            merged.append([left, right])
+        self.intervals = merged
 
     def queryRange(self, left: int, right: int) -> bool:
-        
+        for start, end in self.intervals:
+            if start <= left and right <= end:
+                return True
+            if start > left:
+                break
+        return False
 
     def removeRange(self, left: int, right: int) -> None:
-        
+        merged = []
+        for start, end in self.intervals:
+            if end <= left or start >= right:
+                merged.append([start, end])
+            else:
+                if start < left:
+                    merged.append([start, left])
+                if end > right:
+                    merged.append([right, end])
+        self.intervals = merged
 
 
 # Your RangeModule object will be instantiated and called as such:

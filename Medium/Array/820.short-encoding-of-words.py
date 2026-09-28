@@ -53,4 +53,13 @@ Constraints:
 
 class Solution:
     def minimumLengthEncoding(self, words: list[str]) -> int:
-        
+        words.sort(key=len, reverse=True)
+        total = 0
+        seen = set()
+        for word in words:
+            if word in seen:
+                continue
+            total += len(word) + 1
+            for i in range(len(word)):
+                seen.add(word[i:])
+        return total

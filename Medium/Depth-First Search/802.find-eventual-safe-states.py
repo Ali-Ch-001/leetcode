@@ -57,6 +57,25 @@ Constraints:
 10^4].
 """
 
+import sys
+
+
 class Solution:
     def eventualSafeNodes(self, graph: list[list[int]]) -> list[int]:
-        
+        sys.setrecursionlimit(100000)
+        n = len(graph)
+        state = [0] * n
+
+        def safe(node):
+            if state[node] == 1:
+                return False
+            if state[node] == 2:
+                return True
+            state[node] = 1
+            for neighbor in graph[node]:
+                if not safe(neighbor):
+                    return False
+            state[node] = 2
+            return True
+
+        return [node for node in range(n) if safe(node)]

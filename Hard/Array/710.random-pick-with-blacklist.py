@@ -59,13 +59,26 @@ Constraints:
 	• At most 2 * 10^4 calls will be made to pick.
 """
 
+import random
+
+
 class Solution:
 
     def __init__(self, n: int, blacklist: list[int]):
-        
+        black = set(blacklist)
+        self.bound = n - len(black)
+        self.mapping = {}
+        next_free = self.bound
+        for value in black:
+            if value < self.bound:
+                while next_free in black:
+                    next_free += 1
+                self.mapping[value] = next_free
+                next_free += 1
 
     def pick(self) -> int:
-        
+        value = random.randrange(self.bound)
+        return self.mapping.get(value, value)
 
 
 # Your Solution object will be instantiated and called as such:

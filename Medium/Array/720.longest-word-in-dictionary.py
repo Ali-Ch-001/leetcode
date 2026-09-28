@@ -46,4 +46,11 @@ Constraints:
 
 class Solution:
     def longestWord(self, words: list[str]) -> str:
-        
+        word_set = set(words)
+        best = ""
+        for word in words:
+            if all(word[:i] in word_set for i in range(1, len(word))) and (
+                len(word) > len(best) or (len(word) == len(best) and word < best)
+            ):
+                best = word
+        return best

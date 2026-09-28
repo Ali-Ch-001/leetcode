@@ -60,6 +60,21 @@ Constraints:
 	• 1 <= target <= 10^4
 """
 
+from functools import lru_cache
+
+
 class Solution:
     def racecar(self, target: int) -> int:
-        
+        @lru_cache(maxsize=None)
+        def dp(t):
+            if t == 0:
+                return 0
+            k = t.bit_length()
+            if t == (1 << k) - 1:
+                return k
+            best = dp((1 << k) - 1 - t) + k + 1
+            for i in range(k - 1):
+                best = min(best, dp(t - (1 << (k - 1)) + (1 << i)) + k + i + 1)
+            return best
+
+        return dp(target)

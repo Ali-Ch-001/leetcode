@@ -57,4 +57,24 @@ Constraints:
 
 class Solution:
     def ambiguousCoordinates(self, s: str) -> list[str]:
-        
+        def valid_piece(piece):
+            results = []
+            n = len(piece)
+            if piece == "0" or piece[0] != "0":
+                results.append(piece)
+            for split in range(1, n):
+                left = piece[:split]
+                right = piece[split:]
+                if (left == "0" or left[0] != "0") and right[-1] != "0":
+                    results.append(left + "." + right)
+            return results
+
+        digits = s[1:-1]
+        results = []
+        n = len(digits)
+        for i in range(1, n):
+            left, right = digits[:i], digits[i:]
+            for a in valid_piece(left):
+                for b in valid_piece(right):
+                    results.append(f"({a}, {b})")
+        return results

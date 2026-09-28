@@ -61,6 +61,33 @@ Constraints:
 	• accounts[i][j] (for j > 0) is a valid email.
 """
 
+from collections import defaultdict
+
+
 class Solution:
     def accountsMerge(self, accounts: list[list[str]]) -> list[list[str]]:
-        
+        parent = {}
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        email_to_name = {}
+        for account in accounts:
+            name = account[0]
+            first = account[1]
+            for email in account[1:]:
+                if email not in parent:
+                    parent[email] = email
+                email_to_name[email] = name
+                parent[find(email)] = find(first)
+
+        groups = defaultdict(list)
+        for email in parent:
+            groups[find(email)].append(email)
+        result = []
+        for root, emails in groups.items():
+            result.append([email_to_name[root]] + sorted(emails))
+        return result
