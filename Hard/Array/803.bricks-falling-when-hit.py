@@ -93,31 +93,51 @@ class Solution:
         for r, c in hits:
             grid[r][c] -= 1
 
-        def count_stable():
-            stable = [[False] * cols for _ in range(rows)]
-            stack = []
-            for c in range(cols):
-                if grid[0][c] == 1:
-                    stable[0][c] = True
-                    stack.append((0, c))
-            total = 0
-            while stack:
-                r, c = stack.pop()
-                total += 1
-                for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
-                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1 and not stable[nr][nc]:
-                        stable[nr][nc] = True
-                        stack.append((nr, nc))
-            return total
+        top = rows * cols
+        parent = list(range(top + 1))
+        size = [1] * (top + 1)
 
-        before = count_stable()
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def union(a, b):
+            root_a, root_b = find(a), find(b)
+            if root_a == root_b:
+                return
+            parent[root_b] = root_a
+            size[root_a] += size[root_b]
+
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] != 1:
+                    continue
+                index = r * cols + c
+                if r == 0:
+                    union(index, top)
+                if r > 0 and grid[r - 1][c] == 1:
+                    union(index, index - cols)
+                if c > 0 and grid[r][c - 1] == 1:
+                    union(index, index - 1)
+
+        def connected():
+            return size[find(top)] - 1
+
         result = []
         for r, c in reversed(hits):
             grid[r][c] += 1
-            if grid[r][c] == 1:
-                after = count_stable()
-                result.append(max(0, after - before - 1))
-                before = after
-            else:
+            if grid[r][c] != 1:
                 result.append(0)
+                continue
+            before = connected()
+            index = r * cols + c
+            if r == 0:
+                union(index, top)
+            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+                if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                    union(index, nr * cols + nc)
+            after = connected()
+            result.append(max(0, after - before - 1))
         return result[::-1]
