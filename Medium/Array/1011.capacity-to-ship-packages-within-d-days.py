@@ -65,4 +65,22 @@ Constraints:
 
 class Solution:
     def shipWithinDays(self, weights: list[int], days: int) -> int:
-        
+        def feasible(capacity):
+            used = 1
+            current = 0
+            for weight in weights:
+                if current + weight > capacity:
+                    used += 1
+                    current = weight
+                else:
+                    current += weight
+            return used <= days
+
+        lo, hi = max(weights), sum(weights)
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if feasible(mid):
+                hi = mid
+            else:
+                lo = mid + 1
+        return lo

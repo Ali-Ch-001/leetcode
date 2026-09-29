@@ -56,4 +56,12 @@ Constraints:
 
 class Solution:
     def isAlienSorted(self, words: list[str], order: str) -> bool:
-        
+        rank = {ch: i for i, ch in enumerate(order)}
+
+        def less(a, b):
+            for char_a, char_b in zip(a, b):
+                if rank[char_a] != rank[char_b]:
+                    return rank[char_a] < rank[char_b]
+            return len(a) <= len(b)
+
+        return all(less(words[i - 1], words[i]) for i in range(1, len(words)))

@@ -43,4 +43,15 @@ Constraints:
 #         self.right = right
 class Solution:
     def allPossibleFBT(self, n: int) -> list[TreeNode | None]:
-        
+        if n % 2 == 0:
+            return []
+        memo = {1: [TreeNode(0)]}
+        for size in range(3, n + 1, 2):
+            trees = []
+            for left_size in range(1, size - 1, 2):
+                right_size = size - 1 - left_size
+                for left in memo[left_size]:
+                    for right in memo.get(right_size, []):
+                        trees.append(TreeNode(0, left, right))
+            memo[size] = trees
+        return memo[n]

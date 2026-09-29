@@ -55,4 +55,15 @@ Constraints:
 
 class Solution:
     def profitableSchemes(self, n: int, minProfit: int, group: list[int], profit: list[int]) -> int:
-        
+        MOD = 10**9 + 7
+        dp = [[0] * (minProfit + 1) for _ in range(n + 1)]
+        dp[0][0] = 1
+        for members, value in zip(group, profit):
+            for used in range(n - members, -1, -1):
+                for earned in range(minProfit, -1, -1):
+                    if dp[used][earned]:
+                        new_earned = min(minProfit, earned + value)
+                        dp[used + members][new_earned] = (
+                            dp[used + members][new_earned] + dp[used][earned]
+                        ) % MOD
+        return sum(dp[used][minProfit] for used in range(n + 1)) % MOD

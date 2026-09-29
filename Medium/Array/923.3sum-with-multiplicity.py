@@ -52,4 +52,28 @@ Constraints:
 
 class Solution:
     def threeSumMulti(self, arr: list[int], target: int) -> int:
-        
+        MOD = 10**9 + 7
+        counts = {}
+        for value in arr:
+            counts[value] = counts.get(value, 0) + 1
+        keys = sorted(counts)
+        total = 0
+        for i in range(len(keys)):
+            for j in range(i, len(keys)):
+                remaining = target - keys[i] - keys[j]
+                if remaining < keys[j]:
+                    break
+                if remaining not in counts:
+                    continue
+                if keys[i] == keys[j] == remaining:
+                    n = counts[keys[i]]
+                    total += n * (n - 1) * (n - 2) // 6
+                elif keys[i] == keys[j]:
+                    n = counts[keys[i]]
+                    total += n * (n - 1) // 2 * counts[remaining]
+                elif keys[j] == remaining:
+                    n = counts[keys[j]]
+                    total += counts[keys[i]] * n * (n - 1) // 2
+                else:
+                    total += counts[keys[i]] * counts[keys[j]] * counts[remaining]
+        return total % MOD

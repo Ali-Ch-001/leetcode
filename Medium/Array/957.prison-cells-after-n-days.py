@@ -61,4 +61,18 @@ Constraints:
 
 class Solution:
     def prisonAfterNDays(self, cells: list[int], n: int) -> list[int]:
-        
+        seen = {}
+        while n > 0:
+            key = tuple(cells)
+            if key in seen:
+                cycle = seen[key] - n
+                n %= cycle
+                if n == 0:
+                    break
+            seen[key] = n
+            nxt = [0] * 8
+            for i in range(1, 7):
+                nxt[i] = 1 if cells[i - 1] == cells[i + 1] else 0
+            cells = nxt
+            n -= 1
+        return cells

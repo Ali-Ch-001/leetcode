@@ -49,4 +49,13 @@ Constraints:
 
 class Solution:
     def numMusicPlaylists(self, n: int, goal: int, k: int) -> int:
-        
+        MOD = 10**9 + 7
+        dp = [[0] * (n + 1) for _ in range(goal + 1)]
+        dp[0][0] = 1
+        for length in range(1, goal + 1):
+            for unique in range(1, min(length, n) + 1):
+                dp[length][unique] = dp[length - 1][unique - 1] * (n - unique + 1)
+                if unique > k:
+                    dp[length][unique] += dp[length - 1][unique] * (unique - k)
+                dp[length][unique] %= MOD
+        return dp[goal][n]

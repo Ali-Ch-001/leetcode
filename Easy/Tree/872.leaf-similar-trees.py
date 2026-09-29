@@ -47,4 +47,16 @@ Constraints:
 #         self.right = right
 class Solution:
     def leafSimilar(self, root1: TreeNode | None, root2: TreeNode | None) -> bool:
-        
+        def leaves(node, result):
+            if not node:
+                return
+            if not node.left and not node.right:
+                result.append(node.val)
+                return
+            leaves(node.left, result)
+            leaves(node.right, result)
+
+        first, second = [], []
+        leaves(root1, first)
+        leaves(root2, second)
+        return first == second

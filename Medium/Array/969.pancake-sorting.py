@@ -58,4 +58,15 @@ integers from 1 to arr.length).
 
 class Solution:
     def pancakeSort(self, arr: list[int]) -> list[int]:
-        
+        result = []
+        n = len(arr)
+        for target in range(n, 1, -1):
+            index = arr.index(target)
+            if index == target - 1:
+                continue
+            if index != 0:
+                arr[:index + 1] = arr[:index + 1][::-1]
+                result.append(index + 1)
+            arr[:target] = arr[:target][::-1]
+            result.append(target)
+        return result

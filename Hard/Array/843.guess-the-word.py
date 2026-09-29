@@ -85,4 +85,16 @@ Constraints:
 
 class Solution:
     def findSecretWord(self, words: List[str], master: 'Master') -> None:
-        
+        import random
+
+        candidates = words[:]
+        while candidates:
+            guess_word = random.choice(candidates)
+            matches = master.guess(guess_word)
+            if matches == len(guess_word):
+                return
+            candidates = [
+                word
+                for word in candidates
+                if sum(a == b for a, b in zip(word, guess_word)) == matches
+            ]

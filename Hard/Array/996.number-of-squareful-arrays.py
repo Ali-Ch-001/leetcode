@@ -36,6 +36,35 @@ Constraints:
 	• 0 <= nums[i] <= 10^9
 """
 
+import math
+
+
 class Solution:
     def numSquarefulPerms(self, nums: list[int]) -> int:
-        
+        n = len(nums)
+        nums.sort()
+        used = [False] * n
+        count = 0
+
+        def is_square(value):
+            root = math.isqrt(value)
+            return root * root == value
+
+        def backtrack(previous):
+            nonlocal count
+            if all(used):
+                count += 1
+                return
+            seen = set()
+            for i in range(n):
+                if used[i] or nums[i] in seen:
+                    continue
+                if previous is not None and not is_square(previous + nums[i]):
+                    continue
+                seen.add(nums[i])
+                used[i] = True
+                backtrack(nums[i])
+                used[i] = False
+
+        backtrack(None)
+        return count

@@ -46,4 +46,12 @@ Constraints:
 
 class Solution:
     def distinctSubseqII(self, s: str) -> int:
-        
+        MOD = 10**9 + 7
+        end_with = [0] * 26
+        total = 1
+        for ch in s:
+            index = ord(ch) - 97
+            new_total = (total * 2 - end_with[index]) % MOD
+            end_with[index] = total % MOD
+            total = new_total
+        return (total - 1) % MOD

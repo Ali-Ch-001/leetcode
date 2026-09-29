@@ -45,4 +45,17 @@ https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/
 
 class Solution:
     def isNStraightHand(self, hand: list[int], groupSize: int) -> bool:
-        
+        if len(hand) % groupSize:
+            return False
+        counts = {}
+        for card in hand:
+            counts[card] = counts.get(card, 0) + 1
+        for card in sorted(counts):
+            if counts[card] == 0:
+                continue
+            amount = counts[card]
+            for offset in range(groupSize):
+                if counts.get(card + offset, 0) < amount:
+                    return False
+                counts[card + offset] -= amount
+        return True

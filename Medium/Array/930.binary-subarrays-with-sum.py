@@ -40,4 +40,11 @@ Constraints:
 
 class Solution:
     def numSubarraysWithSum(self, nums: list[int], goal: int) -> int:
-        
+        counts = {0: 1}
+        running = 0
+        result = 0
+        for value in nums:
+            running += value
+            result += counts.get(running - goal, 0)
+            counts[running] = counts.get(running, 0) + 1
+        return result

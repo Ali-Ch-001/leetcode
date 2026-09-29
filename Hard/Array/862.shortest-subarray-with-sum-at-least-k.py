@@ -39,6 +39,21 @@ Constraints:
 	• 1 <= k <= 10^9
 """
 
+from collections import deque
+
+
 class Solution:
     def shortestSubarray(self, nums: list[int], k: int) -> int:
-        
+        n = len(nums)
+        prefix = [0] * (n + 1)
+        for i, value in enumerate(nums):
+            prefix[i + 1] = prefix[i] + value
+        queue = deque()
+        best = n + 1
+        for i in range(n + 1):
+            while queue and prefix[i] - prefix[queue[0]] >= k:
+                best = min(best, i - queue.popleft())
+            while queue and prefix[queue[-1]] >= prefix[i]:
+                queue.pop()
+            queue.append(i)
+        return best if best <= n else -1

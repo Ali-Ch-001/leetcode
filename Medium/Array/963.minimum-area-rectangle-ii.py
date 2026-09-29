@@ -49,6 +49,30 @@ Constraints:
 	• All the given points are unique.
 """
 
+import math
+from collections import defaultdict
+
+
 class Solution:
     def minAreaFreeRect(self, points: list[list[int]]) -> float:
-        
+        n = len(points)
+        groups = defaultdict(list)
+        for i in range(n):
+            x1, y1 = points[i]
+            for j in range(i + 1, n):
+                x2, y2 = points[j]
+                center = ((x1 + x2) / 2, (y1 + y2) / 2)
+                distance = (x1 - x2) ** 2 + (y1 - y2) ** 2
+                groups[(center, distance)].append((x1, y1, x2, y2))
+        best = float("inf")
+        for group in groups.values():
+            for i in range(len(group)):
+                for j in range(i + 1, len(group)):
+                    x1, y1, _, _ = group[i]
+                    x3, y3, x4, y4 = group[j]
+                    side1 = (x1 - x3) ** 2 + (y1 - y3) ** 2
+                    side2 = (x1 - x4) ** 2 + (y1 - y4) ** 2
+                    area = math.sqrt(side1) * math.sqrt(side2)
+                    if area > 0:
+                        best = min(best, area)
+        return best if best != float("inf") else 0

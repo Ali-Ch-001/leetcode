@@ -52,4 +52,20 @@ Constraints:
 
 class Solution:
     def numPermsDISequence(self, s: str) -> int:
-        
+        MOD = 10**9 + 7
+        dp = [1]
+        for ch in s:
+            new_dp = [0] * (len(dp) + 1)
+            if ch == "I":
+                running = 0
+                for j in range(len(dp)):
+                    new_dp[j] = running
+                    running = (running + dp[j]) % MOD
+                new_dp[len(dp)] = running
+            else:
+                running = 0
+                for j in range(len(dp) - 1, -1, -1):
+                    running = (running + dp[j]) % MOD
+                    new_dp[j] = running
+            dp = new_dp
+        return sum(dp) % MOD

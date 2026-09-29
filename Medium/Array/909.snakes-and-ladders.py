@@ -82,6 +82,30 @@ Constraints:
 snake or ladder.
 """
 
+from collections import deque
+
+
 class Solution:
     def snakesAndLadders(self, board: list[list[int]]) -> int:
-        
+        n = len(board)
+        cells = [0] * (n * n + 1)
+        for row in range(n):
+            for col in range(n):
+                value = board[n - 1 - row][col if row % 2 == 0 else n - 1 - col]
+                cells[row * n + col + 1] = value
+        queue = deque([(1, 0)])
+        visited = {1}
+        while queue:
+            square, moves = queue.popleft()
+            for step in range(1, 7):
+                nxt = square + step
+                if nxt > n * n:
+                    continue
+                if cells[nxt] != -1:
+                    nxt = cells[nxt]
+                if nxt == n * n:
+                    return moves + 1
+                if nxt not in visited:
+                    visited.add(nxt)
+                    queue.append((nxt, moves + 1))
+        return -1

@@ -50,4 +50,25 @@ other.
 
 class Solution:
     def numSimilarGroups(self, strs: list[str]) -> int:
-        
+        n = len(strs)
+        parent = list(range(n))
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def similar(a, b):
+            diffs = [i for i in range(len(a)) if a[i] != b[i]]
+            if len(diffs) == 0:
+                return True
+            if len(diffs) != 2:
+                return False
+            return a[diffs[0]] == b[diffs[1]] and a[diffs[1]] == b[diffs[0]]
+
+        for i in range(n):
+            for j in range(i + 1, n):
+                if similar(strs[i], strs[j]):
+                    parent[find(i)] = find(j)
+        return len({find(i) for i in range(n)})

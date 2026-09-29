@@ -58,4 +58,17 @@ Constraints:
 
 class Solution:
     def maxDistToClosest(self, seats: list[int]) -> int:
-        
+        n = len(seats)
+        left = [n] * n
+        previous = -n
+        for i in range(n):
+            if seats[i]:
+                previous = i
+            left[i] = i - previous
+        right = [n] * n
+        previous = 2 * n
+        for i in range(n - 1, -1, -1):
+            if seats[i]:
+                previous = i
+            right[i] = previous - i
+        return max(min(left[i], right[i]) for i in range(n) if not seats[i])

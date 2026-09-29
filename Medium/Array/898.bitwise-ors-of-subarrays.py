@@ -48,4 +48,9 @@ Constraints:
 
 class Solution:
     def subarrayBitwiseORs(self, arr: list[int]) -> int:
-        
+        seen = set()
+        current = set()
+        for value in arr:
+            current = {value | previous for previous in current} | {value}
+            seen |= current
+        return len(seen)

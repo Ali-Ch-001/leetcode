@@ -69,6 +69,17 @@ Constraints:
 	• All the values of deck are unique.
 """
 
+from collections import deque
+
+
 class Solution:
     def deckRevealedIncreasing(self, deck: list[int]) -> list[int]:
-        
+        deck.sort()
+        n = len(deck)
+        indices = deque(range(n))
+        result = [0] * n
+        for card in deck:
+            result[indices.popleft()] = card
+            if indices:
+                indices.append(indices.popleft())
+        return result

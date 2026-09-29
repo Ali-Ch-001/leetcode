@@ -48,4 +48,22 @@ Constraints:
 
 class Solution:
     def numMagicSquaresInside(self, grid: list[list[int]]) -> int:
-        
+        rows, cols = len(grid), len(grid[0])
+        count = 0
+        for r in range(rows - 2):
+            for c in range(cols - 2):
+                values = [grid[r + i][c + j] for i in range(3) for j in range(3)]
+                if sorted(values) != list(range(1, 10)):
+                    continue
+                if (
+                    grid[r][c] + grid[r][c + 1] + grid[r][c + 2]
+                    == grid[r + 1][c] + grid[r + 1][c + 1] + grid[r + 1][c + 2]
+                    == grid[r + 2][c] + grid[r + 2][c + 1] + grid[r + 2][c + 2]
+                    == grid[r][c] + grid[r + 1][c] + grid[r + 2][c]
+                    == grid[r][c + 1] + grid[r + 1][c + 1] + grid[r + 2][c + 1]
+                    == grid[r][c + 2] + grid[r + 1][c + 2] + grid[r + 2][c + 2]
+                    == grid[r][c] + grid[r + 1][c + 1] + grid[r + 2][c + 2]
+                    == grid[r][c + 2] + grid[r + 1][c + 1] + grid[r + 2][c]
+                ):
+                    count += 1
+        return count

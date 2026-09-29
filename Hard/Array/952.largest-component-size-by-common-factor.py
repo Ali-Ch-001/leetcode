@@ -46,4 +46,33 @@ Constraints:
 
 class Solution:
     def largestComponentSize(self, nums: list[int]) -> int:
-        
+        limit = max(nums)
+        parent = list(range(limit + 1))
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def union(a, b):
+            parent[find(a)] = find(b)
+
+        for value in nums:
+            x = value
+            divisor = 2
+            while divisor * divisor <= x:
+                if x % divisor == 0:
+                    union(value, divisor)
+                    while x % divisor == 0:
+                        x //= divisor
+                divisor += 1
+            if x > 1:
+                union(value, x)
+        counts = {}
+        best = 0
+        for value in nums:
+            root = find(value)
+            counts[root] = counts.get(root, 0) + 1
+            best = max(best, counts[root])
+        return best

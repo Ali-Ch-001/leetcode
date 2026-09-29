@@ -51,4 +51,16 @@ Constraints:
 
 class Solution:
     def minKBitFlips(self, nums: list[int], k: int) -> int:
-        
+        n = len(nums)
+        flip = [0] * (n + 1)
+        flips = 0
+        current = 0
+        for i in range(n):
+            current ^= flip[i]
+            if nums[i] ^ current == 0:
+                if i + k > n:
+                    return -1
+                flips += 1
+                current ^= 1
+                flip[i + k] ^= 1
+        return flips

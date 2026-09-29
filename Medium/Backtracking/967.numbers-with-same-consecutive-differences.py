@@ -37,4 +37,17 @@ Constraints:
 
 class Solution:
     def numsSameConsecDiff(self, n: int, k: int) -> list[int]:
-        
+        result = []
+
+        def build(current, length):
+            if length == n:
+                result.append(current)
+                return
+            last = current % 10
+            for nxt in {last - k, last + k}:
+                if 0 <= nxt <= 9:
+                    build(current * 10 + nxt, length + 1)
+
+        for start in range(1, 10):
+            build(start, 1)
+        return result

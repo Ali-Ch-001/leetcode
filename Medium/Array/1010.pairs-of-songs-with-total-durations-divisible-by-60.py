@@ -41,4 +41,11 @@ Constraints:
 
 class Solution:
     def numPairsDivisibleBy60(self, time: list[int]) -> int:
-        
+        counts = {}
+        result = 0
+        for value in time:
+            remainder = value % 60
+            complement = (60 - remainder) % 60
+            result += counts.get(complement, 0)
+            counts[remainder] = counts.get(remainder, 0) + 1
+        return result

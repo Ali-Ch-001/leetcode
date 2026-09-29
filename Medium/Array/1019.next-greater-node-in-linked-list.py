@@ -45,4 +45,15 @@ Constraints:
 #         self.next = next
 class Solution:
     def nextLargerNodes(self, head: ListNode | None) -> list[int]:
-        
+        values = []
+        node = head
+        while node:
+            values.append(node.val)
+            node = node.next
+        result = [0] * len(values)
+        stack = []
+        for i, value in enumerate(values):
+            while stack and values[stack[-1]] < value:
+                result[stack.pop()] = value
+            stack.append(i)
+        return result

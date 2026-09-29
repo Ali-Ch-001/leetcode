@@ -48,4 +48,13 @@ Constraints:
 
 class Solution:
     def addToArrayForm(self, num: list[int], k: int) -> list[int]:
-        
+        result = []
+        carry = k
+        i = len(num) - 1
+        while i >= 0 or carry:
+            if i >= 0:
+                carry += num[i]
+                i -= 1
+            result.append(carry % 10)
+            carry //= 10
+        return result[::-1]

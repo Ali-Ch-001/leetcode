@@ -62,16 +62,34 @@ Constraints:
 	• At most 10^4 calls will be made to seat and leave.
 """
 
+import bisect
+
+
 class ExamRoom:
 
     def __init__(self, n: int):
-        
+        self.n = n
+        self.seats = []
 
     def seat(self) -> int:
-        
+        if not self.seats:
+            position = 0
+        else:
+            best_distance = self.seats[0]
+            position = 0
+            for i in range(1, len(self.seats)):
+                distance = (self.seats[i] - self.seats[i - 1]) // 2
+                if distance > best_distance:
+                    best_distance = distance
+                    position = (self.seats[i] + self.seats[i - 1]) // 2
+            end_distance = self.n - 1 - self.seats[-1]
+            if end_distance > best_distance:
+                position = self.n - 1
+        bisect.insort(self.seats, position)
+        return position
 
     def leave(self, p: int) -> None:
-        
+        self.seats.remove(p)
 
 
 # Your ExamRoom object will be instantiated and called as such:

@@ -43,4 +43,21 @@ Constraints:
 
 class Solution:
     def spiralMatrixIII(self, rows: int, cols: int, rStart: int, cStart: int) -> list[list[int]]:
-        
+        result = []
+        total = rows * cols
+        r, c = rStart, cStart
+        steps = 1
+        direction = 0
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        result.append([r, c])
+        while len(result) < total:
+            for _ in range(2):
+                dr, dc = directions[direction % 4]
+                for _ in range(steps):
+                    r += dr
+                    c += dc
+                    if 0 <= r < rows and 0 <= c < cols:
+                        result.append([r, c])
+                direction += 1
+            steps += 1
+        return result

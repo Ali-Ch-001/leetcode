@@ -96,4 +96,28 @@ Constraints:
 
 class Solution:
     def oddEvenJumps(self, arr: list[int]) -> int:
-        
+        n = len(arr)
+
+        def next_indices(order):
+            result = [-1] * n
+            stack = []
+            for i in order:
+                while stack and stack[-1] < i:
+                    result[stack.pop()] = i
+                stack.append(i)
+            return result
+
+        higher_next = next_indices(sorted(range(n), key=lambda i: (arr[i], i)))
+        lower_next = next_indices(sorted(range(n), key=lambda i: (-arr[i], i)))
+        higher = [False] * n
+        lower = [False] * n
+        higher[-1] = lower[-1] = True
+        count = 1
+        for i in range(n - 2, -1, -1):
+            if higher_next[i] != -1:
+                higher[i] = lower[higher_next[i]]
+            if lower_next[i] != -1:
+                lower[i] = higher[lower_next[i]]
+            if higher[i]:
+                count += 1
+        return count

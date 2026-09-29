@@ -60,16 +60,37 @@ Constraints:
 #         self.val = val
 #         self.left = left
 #         self.right = right
+from collections import deque
+
+
 class CBTInserter:
 
     def __init__(self, root: TreeNode | None):
-        
+        self.root = root
+        self.candidates = deque()
+        queue = deque([root])
+        while queue:
+            node = queue.popleft()
+            if not node.left or not node.right:
+                self.candidates.append(node)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
 
     def insert(self, val: int) -> int:
-        
+        node = self.candidates[0]
+        new_node = TreeNode(val)
+        if not node.left:
+            node.left = new_node
+        else:
+            node.right = new_node
+            self.candidates.popleft()
+        self.candidates.append(new_node)
+        return node.val
 
     def get_root(self) -> TreeNode | None:
-        
+        return self.root
 
 
 # Your CBTInserter object will be instantiated and called as such:

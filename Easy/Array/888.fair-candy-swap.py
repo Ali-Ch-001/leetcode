@@ -54,4 +54,9 @@ Constraints:
 
 class Solution:
     def fairCandySwap(self, aliceSizes: list[int], bobSizes: list[int]) -> list[int]:
-        
+        diff = (sum(bobSizes) - sum(aliceSizes)) // 2
+        bob_set = set(bobSizes)
+        for size in aliceSizes:
+            if size + diff in bob_set:
+                return [size, size + diff]
+        return []

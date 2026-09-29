@@ -80,6 +80,26 @@ itself).
 	• 1 <= <RepeatingPart>.length <= 4
 """
 
+from fractions import Fraction
+
+
 class Solution:
     def isRationalEqual(self, s: str, t: str) -> bool:
-        
+        def parse(text):
+            if "(" in text:
+                base, rep = text.split("(")
+                rep = rep[:-1]
+            else:
+                base, rep = text, ""
+            if "." in base:
+                integer, frac = base.split(".")
+            else:
+                integer, frac = base, ""
+            value = Fraction(int(integer))
+            if frac:
+                value += Fraction(int(frac), 10 ** len(frac))
+            if rep:
+                value += Fraction(int(rep), (10 ** len(rep) - 1) * 10 ** len(frac))
+            return value
+
+        return parse(s) == parse(t)

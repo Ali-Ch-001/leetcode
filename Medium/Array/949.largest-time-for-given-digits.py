@@ -40,6 +40,17 @@ Constraints:
 	• 0 <= arr[i] <= 9
 """
 
+from itertools import permutations
+
+
 class Solution:
     def largestTimeFromDigits(self, arr: list[int]) -> str:
-        
+        best = ""
+        for perm in permutations(arr):
+            hours = perm[0] * 10 + perm[1]
+            minutes = perm[2] * 10 + perm[3]
+            if hours < 24 and minutes < 60:
+                candidate = f"{perm[0]}{perm[1]}:{perm[2]}{perm[3]}"
+                if candidate > best:
+                    best = candidate
+        return best

@@ -40,4 +40,4 @@ trivial, could you find an O(n) solution using a different approach?
 
 class Solution:
     def sortedSquares(self, nums: list[int]) -> list[int]:
-        
+        return sorted(value * value for value in nums)

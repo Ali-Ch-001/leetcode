@@ -39,4 +39,17 @@ Constraints:
 #         self.right = right
 class Solution:
     def increasingBST(self, root: TreeNode | None) -> TreeNode | None:
-        
+        dummy = TreeNode()
+        current = dummy
+        stack = []
+        node = root
+        while node or stack:
+            while node:
+                stack.append(node)
+                node = node.left
+            node = stack.pop()
+            current.right = node
+            node.left = None
+            current = node
+            node = node.right
+        return dummy.right

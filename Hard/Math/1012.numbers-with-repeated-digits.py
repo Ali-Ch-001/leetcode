@@ -38,4 +38,28 @@ Constraints:
 
 class Solution:
     def numDupDigitsAtMostN(self, n: int) -> int:
-        
+        text = str(n)
+        length = len(text)
+
+        def perm(available, choose):
+            result = 1
+            for i in range(choose):
+                result *= available - i
+            return result
+
+        unique = 0
+        for size in range(1, length):
+            unique += 9 * perm(9, size - 1)
+        used = set()
+        for i, ch in enumerate(text):
+            digit = int(ch)
+            for candidate in range(0 if i > 0 else 1, digit):
+                if candidate in used:
+                    continue
+                unique += perm(9 - i, length - i - 1)
+            if digit in used:
+                break
+            used.add(digit)
+        else:
+            unique += 1
+        return n - unique

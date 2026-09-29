@@ -51,4 +51,9 @@ Constraints:
 
 class Solution:
     def shiftingLetters(self, s: str, shifts: list[int]) -> str:
-        
+        result = list(s)
+        total = 0
+        for i in range(len(s) - 1, -1, -1):
+            total = (total + shifts[i]) % 26
+            result[i] = chr((ord(s[i]) - 97 + total) % 26 + 97)
+        return "".join(result)

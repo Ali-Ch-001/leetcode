@@ -66,13 +66,22 @@ stack before calling pop.
 class FreqStack:
 
     def __init__(self):
-        
+        self.frequencies = {}
+        self.groups = {}
+        self.max_frequency = 0
 
     def push(self, val: int) -> None:
-        
+        frequency = self.frequencies.get(val, 0) + 1
+        self.frequencies[val] = frequency
+        self.max_frequency = max(self.max_frequency, frequency)
+        self.groups.setdefault(frequency, []).append(val)
 
     def pop(self) -> int:
-        
+        val = self.groups[self.max_frequency].pop()
+        self.frequencies[val] -= 1
+        if not self.groups[self.max_frequency]:
+            self.max_frequency -= 1
+        return val
 
 
 # Your FreqStack object will be instantiated and called as such:

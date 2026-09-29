@@ -36,4 +36,4 @@ Constraints:
 
 class Solution:
     def queryString(self, s: str, n: int) -> bool:
-        
+        return all(bin(value)[2:] in s for value in range(1, n + 1))

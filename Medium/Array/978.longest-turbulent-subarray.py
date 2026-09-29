@@ -62,4 +62,17 @@ Constraints:
 
 class Solution:
     def maxTurbulenceSize(self, arr: list[int]) -> int:
-        
+        n = len(arr)
+        if n == 1:
+            return 1
+        best = 1
+        current = 1
+        for i in range(1, n):
+            if arr[i] == arr[i - 1]:
+                current = 1
+            elif i == 1 or (arr[i] - arr[i - 1]) * (arr[i - 1] - arr[i - 2]) < 0:
+                current += 1
+            else:
+                current = 2
+            best = max(best, current)
+        return best

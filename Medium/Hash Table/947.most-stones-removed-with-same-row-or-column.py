@@ -61,4 +61,24 @@ Constraints:
 
 class Solution:
     def removeStones(self, stones: list[list[int]]) -> int:
-        
+        parent = {}
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def union(a, b):
+            parent[find(a)] = find(b)
+
+        for x, y in stones:
+            key_x = ("r", x)
+            key_y = ("c", y)
+            if key_x not in parent:
+                parent[key_x] = key_x
+            if key_y not in parent:
+                parent[key_y] = key_y
+            union(key_x, key_y)
+        groups = {find(key) for key in parent}
+        return len(stones) - len(groups)

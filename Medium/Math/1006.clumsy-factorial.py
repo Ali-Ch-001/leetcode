@@ -51,4 +51,16 @@ Constraints:
 
 class Solution:
     def clumsy(self, n: int) -> int:
-        
+        stack = [n]
+        operation = 0
+        for value in range(n - 1, 0, -1):
+            if operation == 0:
+                stack[-1] *= value
+            elif operation == 1:
+                stack[-1] = int(stack[-1] / value)
+            elif operation == 2:
+                stack.append(value)
+            else:
+                stack.append(-value)
+            operation = (operation + 1) % 4
+        return sum(stack)

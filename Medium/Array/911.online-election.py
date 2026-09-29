@@ -64,13 +64,25 @@ Constraints:
 	• At most 10^4 calls will be made to q.
 """
 
+import bisect
+
+
 class TopVotedCandidate:
 
     def __init__(self, persons: list[int], times: list[int]):
-        
+        self.times = times
+        self.leaders = []
+        counts = {}
+        leader = -1
+        for person in persons:
+            counts[person] = counts.get(person, 0) + 1
+            if counts[person] >= counts.get(leader, 0):
+                leader = person
+            self.leaders.append(leader)
 
     def q(self, t: int) -> int:
-        
+        index = bisect.bisect_right(self.times, t) - 1
+        return self.leaders[index]
 
 
 # Your TopVotedCandidate object will be instantiated and called as such:

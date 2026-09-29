@@ -44,6 +44,26 @@ Constraints:
 	• The input graph is always connected.
 """
 
+from collections import deque
+
+
 class Solution:
     def shortestPathLength(self, graph: list[list[int]]) -> int:
-        
+        n = len(graph)
+        full = (1 << n) - 1
+        queue = deque()
+        visited = set()
+        for start in range(n):
+            queue.append((1 << start, start, 0))
+            visited.add((1 << start, start))
+        while queue:
+            mask, node, distance = queue.popleft()
+            if mask == full:
+                return distance
+            for neighbor in graph[node]:
+                next_mask = mask | (1 << neighbor)
+                state = (next_mask, neighbor)
+                if state not in visited:
+                    visited.add(state)
+                    queue.append((next_mask, neighbor, distance + 1))
+        return 0

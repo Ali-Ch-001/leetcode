@@ -47,4 +47,16 @@ Constraints:
 
 class Solution:
     def lenLongestFibSubseq(self, arr: list[int]) -> int:
-        
+        values = set(arr)
+        best = 0
+        n = len(arr)
+        for i in range(n):
+            for j in range(i + 1, n):
+                length = 2
+                a, b = arr[i], arr[j]
+                while a + b in values:
+                    a, b = b, a + b
+                    length += 1
+                if length >= 3:
+                    best = max(best, length)
+        return best

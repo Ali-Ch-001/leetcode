@@ -42,4 +42,9 @@ Constraints:
 
 class Solution:
     def prefixesDivBy5(self, nums: list[int]) -> list[bool]:
-        
+        result = []
+        value = 0
+        for bit in nums:
+            value = (value * 2 + bit) % 5
+            result.append(value == 0)
+        return result

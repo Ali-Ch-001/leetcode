@@ -47,4 +47,26 @@ Constraints:
 
 class Solution:
     def primePalindrome(self, n: int) -> int:
-        
+        def is_prime(value):
+            if value < 2:
+                return False
+            if value % 2 == 0:
+                return value == 2
+            divisor = 3
+            while divisor * divisor <= value:
+                if value % divisor == 0:
+                    return False
+                divisor += 2
+            return True
+
+        if n <= 2:
+            return 2
+        if n % 2 == 0:
+            n += 1
+        while True:
+            if n > 11 and len(str(n)) % 2 == 0:
+                n = 10 ** len(str(n)) + 1
+            text = str(n)
+            if text == text[::-1] and is_prime(n):
+                return n
+            n += 2

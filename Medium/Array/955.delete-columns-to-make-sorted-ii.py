@@ -64,4 +64,19 @@ Constraints:
 
 class Solution:
     def minDeletionSize(self, strs: list[str]) -> int:
-        
+        n = len(strs)
+        kept = [False] * (n - 1)
+        deleted = 0
+        for col in range(len(strs[0])):
+            bad = False
+            for row in range(n - 1):
+                if not kept[row] and strs[row][col] > strs[row + 1][col]:
+                    bad = True
+                    break
+            if bad:
+                deleted += 1
+            else:
+                for row in range(n - 1):
+                    if strs[row][col] < strs[row + 1][col]:
+                        kept[row] = True
+        return deleted

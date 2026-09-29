@@ -68,6 +68,22 @@ Constraints:
 	• 1 <= fueli < 10^9
 """
 
+import heapq
+
+
 class Solution:
     def minRefuelStops(self, target: int, startFuel: int, stations: list[list[int]]) -> int:
-        
+        heap = []
+        stops = 0
+        position = startFuel
+        index = 0
+        n = len(stations)
+        while position < target:
+            while index < n and stations[index][0] <= position:
+                heapq.heappush(heap, -stations[index][1])
+                index += 1
+            if not heap:
+                return -1
+            position += -heapq.heappop(heap)
+            stops += 1
+        return stops

@@ -54,4 +54,25 @@ Constraints:
 
 class Solution:
     def threeEqualParts(self, arr: list[int]) -> list[int]:
-        
+        total = sum(arr)
+        if total % 3:
+            return [-1, -1]
+        if total == 0:
+            return [0, len(arr) - 1]
+        ones_per_part = total // 3
+        first = second = third = -1
+        count = 0
+        for i, value in enumerate(arr):
+            if value:
+                count += 1
+                if count == 1:
+                    first = i
+                elif count == ones_per_part + 1:
+                    second = i
+                elif count == 2 * ones_per_part + 1:
+                    third = i
+        length = len(arr) - third
+        if first + length <= second and second + length <= third:
+            if arr[first:first + length] == arr[second:second + length] == arr[third:]:
+                return [first + length - 1, second + length]
+        return [-1, -1]

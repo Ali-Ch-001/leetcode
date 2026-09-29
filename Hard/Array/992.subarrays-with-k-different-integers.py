@@ -42,4 +42,20 @@ Constraints:
 
 class Solution:
     def subarraysWithKDistinct(self, nums: list[int], k: int) -> int:
-        
+        def at_most(limit):
+            if limit < 0:
+                return 0
+            counts = {}
+            left = 0
+            total = 0
+            for right, value in enumerate(nums):
+                counts[value] = counts.get(value, 0) + 1
+                while len(counts) > limit:
+                    counts[nums[left]] -= 1
+                    if counts[nums[left]] == 0:
+                        del counts[nums[left]]
+                    left += 1
+                total += right - left + 1
+            return total
+
+        return at_most(k) - at_most(k - 1)

@@ -40,4 +40,9 @@ Constraints:
 
 class Solution:
     def maxScoreSightseeingPair(self, values: list[int]) -> int:
-        
+        best = 0
+        current = values[0]
+        for j in range(1, len(values)):
+            best = max(best, current + values[j] - j)
+            current = max(current, values[j] + j)
+        return best

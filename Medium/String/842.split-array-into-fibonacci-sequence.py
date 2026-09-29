@@ -56,4 +56,30 @@ Constraints:
 
 class Solution:
     def splitIntoFibonacci(self, num: str) -> list[int]:
-        
+        n = len(num)
+        result = []
+
+        def backtrack(index):
+            if index == n:
+                return len(result) >= 3
+            current = 0
+            for i in range(index, n):
+                if i > index and num[index] == "0":
+                    break
+                current = current * 10 + int(num[i])
+                if current > 2**31 - 1:
+                    break
+                if len(result) >= 2:
+                    total = result[-1] + result[-2]
+                    if current < total:
+                        continue
+                    if current > total:
+                        break
+                result.append(current)
+                if backtrack(i + 1):
+                    return True
+                result.pop()
+            return False
+
+        backtrack(0)
+        return result

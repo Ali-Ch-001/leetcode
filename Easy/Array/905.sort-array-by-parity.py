@@ -35,4 +35,4 @@ Constraints:
 
 class Solution:
     def sortArrayByParity(self, nums: list[int]) -> list[int]:
-        
+        return [value for value in nums if value % 2 == 0] + [value for value in nums if value % 2]

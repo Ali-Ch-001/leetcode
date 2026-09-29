@@ -61,4 +61,14 @@ Constraints:
 
 class Solution:
     def atMostNGivenDigitSet(self, digits: list[str], n: int) -> int:
-        
+        text = str(n)
+        length = len(text)
+        count = 0
+        for size in range(1, length):
+            count += len(digits) ** size
+        for i, ch in enumerate(text):
+            smaller = sum(1 for d in digits if d < ch)
+            count += smaller * (len(digits) ** (length - i - 1))
+            if ch not in digits:
+                return count
+        return count + 1

@@ -47,4 +47,22 @@ Constraints:
 
 class Solution:
     def possibleBipartition(self, n: int, dislikes: list[list[int]]) -> bool:
-        
+        graph = [[] for _ in range(n + 1)]
+        for a, b in dislikes:
+            graph[a].append(b)
+            graph[b].append(a)
+        colors = [0] * (n + 1)
+        for start in range(1, n + 1):
+            if colors[start]:
+                continue
+            colors[start] = 1
+            stack = [start]
+            while stack:
+                node = stack.pop()
+                for neighbor in graph[node]:
+                    if colors[neighbor] == 0:
+                        colors[neighbor] = -colors[node]
+                        stack.append(neighbor)
+                    elif colors[neighbor] == colors[node]:
+                        return False
+        return True

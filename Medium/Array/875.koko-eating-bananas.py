@@ -50,4 +50,14 @@ Constraints:
 
 class Solution:
     def minEatingSpeed(self, piles: list[int], h: int) -> int:
-        
+        def hours_needed(speed):
+            return sum((pile + speed - 1) // speed for pile in piles)
+
+        lo, hi = 1, max(piles)
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if hours_needed(mid) <= h:
+                hi = mid
+            else:
+                lo = mid + 1
+        return lo

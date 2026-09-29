@@ -73,6 +73,41 @@ Constraints:
 	• Each key in the grid has a matching lock.
 """
 
+from collections import deque
+
+
 class Solution:
     def shortestPathAllKeys(self, grid: list[str]) -> int:
-        
+        rows, cols = len(grid), len(grid[0])
+        start = None
+        keys_needed = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == "@":
+                    start = (r, c)
+                elif "a" <= grid[r][c] <= "f":
+                    keys_needed |= 1 << (ord(grid[r][c]) - ord("a"))
+        full = keys_needed
+        queue = deque([(start[0], start[1], 0, 0)])
+        visited = {(start[0], start[1], 0)}
+        while queue:
+            r, c, keys, distance = queue.popleft()
+            if keys == full:
+                return distance
+            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+                if not (0 <= nr < rows and 0 <= nc < cols):
+                    continue
+                cell = grid[nr][nc]
+                if cell == "#":
+                    continue
+                new_keys = keys
+                if "a" <= cell <= "f":
+                    new_keys |= 1 << (ord(cell) - ord("a"))
+                elif "A" <= cell <= "F":
+                    if not (keys & (1 << (ord(cell) - ord("A")))):
+                        continue
+                state = (nr, nc, new_keys)
+                if state not in visited:
+                    visited.add(state)
+                    queue.append((nr, nc, new_keys, distance + 1))
+        return -1

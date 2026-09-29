@@ -41,4 +41,14 @@ Constraints:
 
 class Solution:
     def canReorderDoubled(self, arr: list[int]) -> bool:
-        
+        counts = {}
+        for value in arr:
+            counts[value] = counts.get(value, 0) + 1
+        for value in sorted(counts, key=abs):
+            if counts[value] == 0:
+                continue
+            if counts.get(2 * value, 0) < counts[value]:
+                return False
+            counts[2 * value] -= counts[value]
+            counts[value] = 0
+        return True

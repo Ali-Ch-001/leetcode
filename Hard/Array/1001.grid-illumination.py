@@ -73,4 +73,32 @@ Constraints:
 
 class Solution:
     def gridIllumination(self, n: int, lamps: list[list[int]], queries: list[list[int]]) -> list[int]:
-        
+        rows = {}
+        cols = {}
+        diag1 = {}
+        diag2 = {}
+        lamp_set = set()
+        for r, c in lamps:
+            if (r, c) in lamp_set:
+                continue
+            lamp_set.add((r, c))
+            rows[r] = rows.get(r, 0) + 1
+            cols[c] = cols.get(c, 0) + 1
+            diag1[r - c] = diag1.get(r - c, 0) + 1
+            diag2[r + c] = diag2.get(r + c, 0) + 1
+        result = []
+        for r, c in queries:
+            if rows.get(r) or cols.get(c) or diag1.get(r - c) or diag2.get(r + c):
+                result.append(1)
+            else:
+                result.append(0)
+            for dr in (-1, 0, 1):
+                for dc in (-1, 0, 1):
+                    nr, nc = r + dr, c + dc
+                    if (nr, nc) in lamp_set:
+                        lamp_set.discard((nr, nc))
+                        rows[nr] -= 1
+                        cols[nc] -= 1
+                        diag1[nr - nc] -= 1
+                        diag2[nr + nc] -= 1
+        return result

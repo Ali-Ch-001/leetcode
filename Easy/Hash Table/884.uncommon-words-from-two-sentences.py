@@ -48,4 +48,7 @@ Constraints:
 
 class Solution:
     def uncommonFromSentences(self, s1: str, s2: str) -> list[str]:
-        
+        counts = {}
+        for word in (s1 + " " + s2).split():
+            counts[word] = counts.get(word, 0) + 1
+        return [word for word, count in counts.items() if count == 1]

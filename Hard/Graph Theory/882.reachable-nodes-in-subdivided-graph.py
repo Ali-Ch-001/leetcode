@@ -69,6 +69,29 @@ Constraints:
 	• 1 <= n <= 3000
 """
 
+import heapq
+
+
 class Solution:
     def reachableNodes(self, edges: list[list[int]], maxMoves: int, n: int) -> int:
-        
+        graph = [[] for _ in range(n)]
+        for u, v, count in edges:
+            graph[u].append((v, count))
+            graph[v].append((u, count))
+        distances = {0: 0}
+        heap = [(0, 0)]
+        while heap:
+            distance, node = heapq.heappop(heap)
+            if distance > distances.get(node, float("inf")):
+                continue
+            for neighbor, count in graph[node]:
+                new_distance = distance + count + 1
+                if new_distance < distances.get(neighbor, float("inf")):
+                    distances[neighbor] = new_distance
+                    heapq.heappush(heap, (new_distance, neighbor))
+        total = sum(1 for node in range(n) if distances.get(node, float("inf")) <= maxMoves)
+        for u, v, count in edges:
+            from_u = max(0, maxMoves - distances.get(u, float("inf")))
+            from_v = max(0, maxMoves - distances.get(v, float("inf")))
+            total += min(count, from_u + from_v)
+        return total

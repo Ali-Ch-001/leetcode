@@ -49,4 +49,13 @@ Constraints:
 
 class Solution:
     def new21Game(self, n: int, k: int, maxPts: int) -> float:
-        
+        if k == 0:
+            return 1.0
+        dp = [0.0] * (k + maxPts + 1)
+        for points in range(k, min(n, k + maxPts - 1) + 1):
+            dp[points] = 1.0
+        window = sum(dp[k:k + maxPts])
+        for points in range(k - 1, -1, -1):
+            dp[points] = window / maxPts
+            window += dp[points] - dp[points + maxPts]
+        return dp[0]

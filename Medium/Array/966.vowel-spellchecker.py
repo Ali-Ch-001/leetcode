@@ -89,4 +89,25 @@ Constraints:
 
 class Solution:
     def spellchecker(self, wordlist: list[str], queries: list[str]) -> list[str]:
-        
+        exact = set(wordlist)
+        case_map = {}
+        vowel_map = {}
+        for word in wordlist:
+            lower = word.lower()
+            if lower not in case_map:
+                case_map[lower] = word
+            devoweled = "".join("*" if ch in "aeiou" else ch for ch in lower)
+            if devoweled not in vowel_map:
+                vowel_map[devoweled] = word
+        result = []
+        for query in queries:
+            if query in exact:
+                result.append(query)
+                continue
+            lower = query.lower()
+            if lower in case_map:
+                result.append(case_map[lower])
+                continue
+            devoweled = "".join("*" if ch in "aeiou" else ch for ch in lower)
+            result.append(vowel_map.get(devoweled, ""))
+        return result

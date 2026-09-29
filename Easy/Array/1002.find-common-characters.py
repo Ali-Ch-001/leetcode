@@ -34,4 +34,20 @@ Constraints:
 
 class Solution:
     def commonChars(self, words: list[str]) -> list[str]:
-        
+        common = None
+        for word in words:
+            counts = {}
+            for ch in word:
+                counts[ch] = counts.get(ch, 0) + 1
+            if common is None:
+                common = counts
+            else:
+                for ch in list(common):
+                    if ch in counts:
+                        common[ch] = min(common[ch], counts[ch])
+                    else:
+                        del common[ch]
+        result = []
+        for ch, count in common.items():
+            result.extend([ch] * count)
+        return result

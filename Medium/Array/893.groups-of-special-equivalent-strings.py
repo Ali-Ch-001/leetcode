@@ -61,4 +61,9 @@ Constraints:
 
 class Solution:
     def numSpecialEquivGroups(self, words: list[str]) -> int:
-        
+        seen = set()
+        for word in words:
+            even = "".join(sorted(word[::2]))
+            odd = "".join(sorted(word[1::2]))
+            seen.add((even, odd))
+        return len(seen)

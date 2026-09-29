@@ -62,4 +62,17 @@ Constraints:
 
 class Solution:
     def videoStitching(self, clips: list[list[int]], time: int) -> int:
-        
+        clips.sort()
+        count = 0
+        current_end = 0
+        index = 0
+        while current_end < time:
+            furthest = current_end
+            while index < len(clips) and clips[index][0] <= current_end:
+                furthest = max(furthest, clips[index][1])
+                index += 1
+            if furthest == current_end:
+                return -1
+            current_end = furthest
+            count += 1
+        return count

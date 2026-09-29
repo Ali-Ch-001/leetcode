@@ -76,4 +76,7 @@ Constraints:
 #         self.right = right
 class Solution:
     def insertIntoMaxTree(self, root: TreeNode | None, val: int) -> TreeNode | None:
-        
+        if not root or val > root.val:
+            return TreeNode(val, root, None)
+        root.right = self.insertIntoMaxTree(root.right, val)
+        return root

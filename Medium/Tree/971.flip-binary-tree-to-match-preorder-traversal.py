@@ -69,4 +69,24 @@ Constraints:
 #         self.right = right
 class Solution:
     def flipMatchVoyage(self, root: TreeNode | None, voyage: list[int]) -> list[int]:
-        
+        self.index = 0
+        self.flips = []
+        self.possible = True
+
+        def dfs(node):
+            if not node or not self.possible:
+                return
+            if node.val != voyage[self.index]:
+                self.possible = False
+                return
+            self.index += 1
+            if node.left and node.left.val != voyage[self.index]:
+                self.flips.append(node.val)
+                dfs(node.right)
+                dfs(node.left)
+            else:
+                dfs(node.left)
+                dfs(node.right)
+
+        dfs(root)
+        return self.flips if self.possible else [-1]

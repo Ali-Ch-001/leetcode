@@ -38,4 +38,11 @@ Constraints:
 
 class Solution:
     def subarraysDivByK(self, nums: list[int], k: int) -> int:
-        
+        counts = {0: 1}
+        running = 0
+        result = 0
+        for value in nums:
+            running = (running + value) % k
+            result += counts.get(running, 0)
+            counts[running] = counts.get(running, 0) + 1
+        return result

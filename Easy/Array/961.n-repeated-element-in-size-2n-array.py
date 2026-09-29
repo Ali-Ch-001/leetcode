@@ -49,4 +49,9 @@ exactly n times.
 
 class Solution:
     def repeatedNTimes(self, nums: list[int]) -> int:
-        
+        seen = set()
+        for value in nums:
+            if value in seen:
+                return value
+            seen.add(value)
+        return -1

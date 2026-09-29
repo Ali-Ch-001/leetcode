@@ -45,4 +45,24 @@ Constraints:
 
 class Solution:
     def numEnclaves(self, grid: list[list[int]]) -> int:
-        
+        rows, cols = len(grid), len(grid[0])
+
+        def clear(start_r, start_c):
+            if grid[start_r][start_c] != 1:
+                return
+            grid[start_r][start_c] = 0
+            stack = [(start_r, start_c)]
+            while stack:
+                r, c = stack.pop()
+                for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                        grid[nr][nc] = 0
+                        stack.append((nr, nc))
+
+        for r in range(rows):
+            clear(r, 0)
+            clear(r, cols - 1)
+        for c in range(cols):
+            clear(0, c)
+            clear(rows - 1, c)
+        return sum(sum(row) for row in grid)

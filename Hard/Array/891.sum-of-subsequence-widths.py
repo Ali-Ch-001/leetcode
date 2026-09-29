@@ -44,4 +44,16 @@ Constraints:
 
 class Solution:
     def sumSubseqWidths(self, nums: list[int]) -> int:
-        
+        MOD = 10**9 + 7
+        nums.sort()
+        n = len(nums)
+        total = 0
+        power = 1
+        for i in range(n):
+            total = (total + nums[i] * power) % MOD
+            power = power * 2 % MOD
+        power = 1
+        for i in range(n - 1, -1, -1):
+            total = (total - nums[i] * power) % MOD
+            power = power * 2 % MOD
+        return total % MOD

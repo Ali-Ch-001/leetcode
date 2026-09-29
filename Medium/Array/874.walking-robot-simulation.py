@@ -122,4 +122,22 @@ Constraints:
 
 class Solution:
     def robotSim(self, commands: list[int], obstacles: list[list[int]]) -> int:
-        
+        obstacles_set = {tuple(obstacle) for obstacle in obstacles}
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        direction = 0
+        x = y = 0
+        best = 0
+        for command in commands:
+            if command == -2:
+                direction = (direction - 1) % 4
+            elif command == -1:
+                direction = (direction + 1) % 4
+            else:
+                dx, dy = directions[direction]
+                for _ in range(command):
+                    nx, ny = x + dx, y + dy
+                    if (nx, ny) in obstacles_set:
+                        break
+                    x, y = nx, ny
+                best = max(best, x * x + y * y)
+        return best

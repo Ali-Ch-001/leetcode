@@ -51,4 +51,8 @@ Constraints:
 
 class Solution:
     def projectionArea(self, grid: list[list[int]]) -> int:
-        
+        n = len(grid)
+        top = sum(1 for r in range(n) for c in range(n) if grid[r][c])
+        front = sum(max(row) for row in grid)
+        side = sum(max(grid[r][c] for r in range(n)) for c in range(n))
+        return top + front + side

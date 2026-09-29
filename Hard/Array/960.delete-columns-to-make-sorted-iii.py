@@ -64,4 +64,10 @@ Constraints:
 
 class Solution:
     def minDeletionSize(self, strs: list[str]) -> int:
-        
+        n = len(strs[0])
+        dp = [1] * n
+        for i in range(n):
+            for j in range(i):
+                if all(strs[row][j] <= strs[row][i] for row in range(len(strs))):
+                    dp[i] = max(dp[i], dp[j] + 1)
+        return n - max(dp)

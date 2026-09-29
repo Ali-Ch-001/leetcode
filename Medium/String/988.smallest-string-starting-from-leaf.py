@@ -52,4 +52,19 @@ Constraints:
 #         self.right = right
 class Solution:
     def smallestFromLeaf(self, root: TreeNode | None) -> str:
-        
+        best = None
+
+        def dfs(node, path):
+            nonlocal best
+            if not node:
+                return
+            path = chr(ord("a") + node.val) + path
+            if not node.left and not node.right:
+                if best is None or path < best:
+                    best = path
+                return
+            dfs(node.left, path)
+            dfs(node.right, path)
+
+        dfs(root, "")
+        return best

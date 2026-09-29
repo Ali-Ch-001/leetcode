@@ -46,4 +46,16 @@ Constraints:
 
 class Solution:
     def surfaceArea(self, grid: list[list[int]]) -> int:
-        
+        n = len(grid)
+        total = 0
+        for r in range(n):
+            for c in range(n):
+                if grid[r][c]:
+                    total += 2
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = r + dr, c + dc
+                        if 0 <= nr < n and 0 <= nc < n:
+                            total += max(0, grid[r][c] - grid[nr][nc])
+                        else:
+                            total += grid[r][c]
+        return total

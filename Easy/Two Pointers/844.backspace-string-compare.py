@@ -46,4 +46,14 @@ Follow up: Can you solve it in O(n) time and O(1) space?
 
 class Solution:
     def backspaceCompare(self, s: str, t: str) -> bool:
-        
+        def process(text):
+            stack = []
+            for ch in text:
+                if ch == "#":
+                    if stack:
+                        stack.pop()
+                else:
+                    stack.append(ch)
+            return stack
+
+        return process(s) == process(t)

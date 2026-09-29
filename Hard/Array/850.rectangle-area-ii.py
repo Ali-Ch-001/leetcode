@@ -52,4 +52,26 @@ Constraints:
 
 class Solution:
     def rectangleArea(self, rectangles: list[list[int]]) -> int:
-        
+        MOD = 10**9 + 7
+        xs = sorted({x for rx1, _, rx2, _ in rectangles for x in (rx1, rx2)})
+        total = 0
+        for i in range(len(xs) - 1):
+            x1, x2 = xs[i], xs[i + 1]
+            intervals = []
+            for rx1, ry1, rx2, ry2 in rectangles:
+                if rx1 <= x1 and rx2 >= x2:
+                    intervals.append((ry1, ry2))
+            if not intervals:
+                continue
+            intervals.sort()
+            covered = 0
+            current_start, current_end = intervals[0]
+            for start, end in intervals[1:]:
+                if start > current_end:
+                    covered += current_end - current_start
+                    current_start, current_end = start, end
+                else:
+                    current_end = max(current_end, end)
+            covered += current_end - current_start
+            total += covered * (x2 - x1)
+        return total % MOD

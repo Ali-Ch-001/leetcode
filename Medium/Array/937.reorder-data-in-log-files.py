@@ -63,4 +63,13 @@ after the identifier.
 
 class Solution:
     def reorderLogFiles(self, logs: list[str]) -> list[str]:
-        
+        letters = []
+        digits = []
+        for log in logs:
+            identifier, rest = log.split(" ", 1)
+            if rest[0].isdigit():
+                digits.append(log)
+            else:
+                letters.append((rest, identifier, log))
+        letters.sort()
+        return [entry[2] for entry in letters] + digits

@@ -36,4 +36,7 @@ Constraints:
 
 class Solution:
     def beautifulArray(self, n: int) -> list[int]:
-        
+        result = [1]
+        while len(result) < n:
+            result = [value * 2 - 1 for value in result] + [value * 2 for value in result]
+        return [value for value in result if value <= n]

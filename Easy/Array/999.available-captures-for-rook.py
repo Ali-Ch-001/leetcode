@@ -71,4 +71,20 @@ Constraints:
 
 class Solution:
     def numRookCaptures(self, board: list[list[str]]) -> int:
-        
+        rows, cols = len(board), len(board[0])
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c] == "R":
+                    rook_r, rook_c = r, c
+        captures = 0
+        for dr, dc in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+            r, c = rook_r + dr, rook_c + dc
+            while 0 <= r < rows and 0 <= c < cols:
+                if board[r][c] == "p":
+                    captures += 1
+                    break
+                if board[r][c] != ".":
+                    break
+                r += dr
+                c += dc
+        return captures

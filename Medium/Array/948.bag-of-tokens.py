@@ -79,4 +79,20 @@ Constraints:
 
 class Solution:
     def bagOfTokensScore(self, tokens: list[int], power: int) -> int:
-        
+        tokens.sort()
+        left, right = 0, len(tokens) - 1
+        score = 0
+        best = 0
+        while left <= right:
+            if power >= tokens[left]:
+                power -= tokens[left]
+                score += 1
+                best = max(best, score)
+                left += 1
+            elif score > 0:
+                power += tokens[right]
+                score -= 1
+                right -= 1
+            else:
+                break
+        return best

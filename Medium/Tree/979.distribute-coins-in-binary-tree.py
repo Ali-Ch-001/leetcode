@@ -54,4 +54,16 @@ Constraints:
 #         self.right = right
 class Solution:
     def distributeCoins(self, root: TreeNode | None) -> int:
-        
+        moves = 0
+
+        def dfs(node):
+            nonlocal moves
+            if not node:
+                return 0
+            left = dfs(node.left)
+            right = dfs(node.right)
+            moves += abs(left) + abs(right)
+            return node.val + left + right - 1
+
+        dfs(root)
+        return moves

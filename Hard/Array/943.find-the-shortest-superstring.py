@@ -39,6 +39,41 @@ Constraints:
 	• All the strings of words are unique.
 """
 
+from functools import lru_cache
+
+
 class Solution:
     def shortestSuperstring(self, words: list[str]) -> str:
-        
+        n = len(words)
+        overlap = [[0] * n for _ in range(n)]
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    continue
+                limit = min(len(words[i]), len(words[j]))
+                for length in range(limit, 0, -1):
+                    if words[i].endswith(words[j][:length]):
+                        overlap[i][j] = length
+                        break
+        full = (1 << n) - 1
+
+        @lru_cache(maxsize=None)
+        def dfs(mask, last):
+            if mask == full:
+                return words[last]
+            best = None
+            for nxt in range(n):
+                if mask & (1 << nxt):
+                    continue
+                tail = dfs(mask | (1 << nxt), nxt)
+                candidate = words[last] + tail[overlap[last][nxt]:]
+                if best is None or len(candidate) < len(best):
+                    best = candidate
+            return best
+
+        result = None
+        for start in range(n):
+            candidate = dfs(1 << start, start)
+            if result is None or len(candidate) < len(result):
+                result = candidate
+        return result

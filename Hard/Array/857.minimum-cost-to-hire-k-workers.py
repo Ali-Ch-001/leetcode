@@ -50,6 +50,20 @@ Constraints:
 	• 1 <= quality[i], wage[i] <= 10^4
 """
 
+import heapq
+
+
 class Solution:
     def mincostToHireWorkers(self, quality: list[int], wage: list[int], k: int) -> float:
-        
+        workers = sorted((w / q, q) for q, w in zip(quality, wage))
+        heap = []
+        total_quality = 0
+        best = float("inf")
+        for ratio, q in workers:
+            heapq.heappush(heap, -q)
+            total_quality += q
+            if len(heap) > k:
+                total_quality += heapq.heappop(heap)
+            if len(heap) == k:
+                best = min(best, ratio * total_quality)
+        return best

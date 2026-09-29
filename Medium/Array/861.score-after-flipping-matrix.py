@@ -45,4 +45,13 @@ Constraints:
 
 class Solution:
     def matrixScore(self, grid: list[list[int]]) -> int:
-        
+        rows, cols = len(grid), len(grid[0])
+        for r in range(rows):
+            if grid[r][0] == 0:
+                for c in range(cols):
+                    grid[r][c] ^= 1
+        total = 0
+        for c in range(cols):
+            ones = sum(grid[r][c] for r in range(rows))
+            total += max(ones, rows - ones) * (1 << (cols - 1 - c))
+        return total

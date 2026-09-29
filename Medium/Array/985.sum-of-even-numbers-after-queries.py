@@ -52,4 +52,13 @@ Constraints:
 
 class Solution:
     def sumEvenAfterQueries(self, nums: list[int], queries: list[list[int]]) -> list[int]:
-        
+        total = sum(value for value in nums if value % 2 == 0)
+        result = []
+        for value, index in queries:
+            if nums[index] % 2 == 0:
+                total -= nums[index]
+            nums[index] += value
+            if nums[index] % 2 == 0:
+                total += nums[index]
+            result.append(total)
+        return result

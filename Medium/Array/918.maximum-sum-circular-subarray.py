@@ -49,4 +49,14 @@ Constraints:
 
 class Solution:
     def maxSubarraySumCircular(self, nums: list[int]) -> int:
-        
+        total = sum(nums)
+        max_sum = current_max = nums[0]
+        min_sum = current_min = nums[0]
+        for value in nums[1:]:
+            current_max = max(value, current_max + value)
+            max_sum = max(max_sum, current_max)
+            current_min = min(value, current_min + value)
+            min_sum = min(min_sum, current_min)
+        if max_sum < 0:
+            return max_sum
+        return max(max_sum, total - min_sum)

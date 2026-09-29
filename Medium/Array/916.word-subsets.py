@@ -57,4 +57,18 @@ Constraints:
 
 class Solution:
     def wordSubsets(self, words1: list[str], words2: list[str]) -> list[str]:
-        
+        required = {}
+        for word in words2:
+            counts = {}
+            for ch in word:
+                counts[ch] = counts.get(ch, 0) + 1
+            for ch, count in counts.items():
+                required[ch] = max(required.get(ch, 0), count)
+        result = []
+        for word in words1:
+            counts = {}
+            for ch in word:
+                counts[ch] = counts.get(ch, 0) + 1
+            if all(counts.get(ch, 0) >= count for ch, count in required.items()):
+                result.append(word)
+        return result

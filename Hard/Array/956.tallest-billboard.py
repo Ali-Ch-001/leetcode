@@ -51,4 +51,14 @@ Constraints:
 
 class Solution:
     def tallestBillboard(self, rods: list[int]) -> int:
-        
+        dp = {0: 0}
+        for rod in rods:
+            nxt = dict(dp)
+            for diff, low in dp.items():
+                if diff >= rod:
+                    nxt[diff - rod] = max(nxt.get(diff - rod, 0), low + rod)
+                else:
+                    nxt[rod - diff] = max(nxt.get(rod - diff, 0), low + diff)
+                nxt[diff + rod] = max(nxt.get(diff + rod, 0), low)
+            dp = nxt
+        return dp[0]

@@ -54,4 +54,13 @@ Constraints:
 
 class Solution:
     def countTriplets(self, nums: list[int]) -> int:
-        
+        counts = {}
+        for a in nums:
+            for b in nums:
+                counts[a & b] = counts.get(a & b, 0) + 1
+        total = 0
+        for value, count in counts.items():
+            for c in nums:
+                if value & c == 0:
+                    total += count
+        return total

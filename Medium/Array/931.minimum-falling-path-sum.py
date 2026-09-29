@@ -40,4 +40,16 @@ Constraints:
 
 class Solution:
     def minFallingPathSum(self, matrix: list[list[int]]) -> int:
-        
+        n = len(matrix)
+        row = matrix[0][:]
+        for r in range(1, n):
+            new_row = [0] * n
+            for c in range(n):
+                best = row[c]
+                if c > 0:
+                    best = min(best, row[c - 1])
+                if c < n - 1:
+                    best = min(best, row[c + 1])
+                new_row[c] = matrix[r][c] + best
+            row = new_row
+        return min(row)

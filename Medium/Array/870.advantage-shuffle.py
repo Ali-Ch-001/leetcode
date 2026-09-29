@@ -35,6 +35,17 @@ Constraints:
 	• 0 <= nums1[i], nums2[i] <= 10^9
 """
 
+import bisect
+
+
 class Solution:
     def advantageCount(self, nums1: list[int], nums2: list[int]) -> list[int]:
-        
+        remaining = sorted(nums1)
+        result = []
+        for value in nums2:
+            index = bisect.bisect_right(remaining, value)
+            if index < len(remaining):
+                result.append(remaining.pop(index))
+            else:
+                result.append(remaining.pop(0))
+        return result

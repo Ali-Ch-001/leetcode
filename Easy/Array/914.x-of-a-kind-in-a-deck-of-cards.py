@@ -39,6 +39,15 @@ Constraints:
 	• 0 <= deck[i] < 10^4
 """
 
+import math
+
+
 class Solution:
     def hasGroupsSizeX(self, deck: list[int]) -> bool:
-        
+        counts = {}
+        for card in deck:
+            counts[card] = counts.get(card, 0) + 1
+        overall = 0
+        for count in counts.values():
+            overall = math.gcd(overall, count)
+        return overall > 1

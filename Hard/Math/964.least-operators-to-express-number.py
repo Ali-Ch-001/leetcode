@@ -63,4 +63,17 @@ Constraints:
 
 class Solution:
     def leastOpsExpressTarget(self, x: int, target: int) -> int:
-        
+        pos = neg = k = 0
+        y = target
+        while y:
+            y, digit = divmod(y, x)
+            if k == 0:
+                pos = digit * 2
+                neg = (x - digit) * 2
+            else:
+                pos, neg = (
+                    min(digit * k + pos, (digit + 1) * k + neg),
+                    min((x - digit) * k + pos, (x - digit - 1) * k + neg),
+                )
+            k += 1
+        return min(pos, k + neg) - 1

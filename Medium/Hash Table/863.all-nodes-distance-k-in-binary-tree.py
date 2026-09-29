@@ -49,4 +49,29 @@ Constraints:
 
 class Solution:
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
-        
+        graph = {}
+
+        def build(node, parent):
+            if not node:
+                return
+            graph.setdefault(node.val, [])
+            if parent is not None:
+                graph[node.val].append(parent)
+                graph.setdefault(parent, []).append(node.val)
+            build(node.left, node.val)
+            build(node.right, node.val)
+
+        build(root, None)
+        result = []
+        visited = {target.val}
+        queue = [(target.val, 0)]
+        while queue:
+            node, distance = queue.pop(0)
+            if distance == k:
+                result.append(node)
+                continue
+            for neighbor in graph.get(node, []):
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append((neighbor, distance + 1))
+        return result

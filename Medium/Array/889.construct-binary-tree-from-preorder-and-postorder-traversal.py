@@ -52,4 +52,19 @@ traversal and postorder traversal of the same binary tree.
 #         self.right = right
 class Solution:
     def constructFromPrePost(self, preorder: list[int], postorder: list[int]) -> TreeNode | None:
-        
+        index = {value: i for i, value in enumerate(postorder)}
+
+        def build(pre_start, pre_end, post_start, post_end):
+            if pre_start > pre_end:
+                return None
+            root = TreeNode(preorder[pre_start])
+            if pre_start == pre_end:
+                return root
+            left_value = preorder[pre_start + 1]
+            left_index = index[left_value]
+            left_size = left_index - post_start + 1
+            root.left = build(pre_start + 1, pre_start + left_size, post_start, left_index)
+            root.right = build(pre_start + left_size + 1, pre_end, left_index + 1, post_end - 1)
+            return root
+
+        return build(0, len(preorder) - 1, 0, len(postorder) - 1)

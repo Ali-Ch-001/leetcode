@@ -42,4 +42,15 @@ Constraints:
 
 class Solution:
     def canThreePartsEqualSum(self, arr: list[int]) -> bool:
-        
+        total = sum(arr)
+        if total % 3:
+            return False
+        target = total // 3
+        parts = 0
+        running = 0
+        for value in arr:
+            running += value
+            if running == target:
+                parts += 1
+                running = 0
+        return parts >= 3

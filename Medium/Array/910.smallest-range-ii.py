@@ -51,4 +51,10 @@ Constraints:
 
 class Solution:
     def smallestRangeII(self, nums: list[int], k: int) -> int:
-        
+        nums.sort()
+        best = nums[-1] - nums[0]
+        for i in range(len(nums) - 1):
+            high = max(nums[i] + k, nums[-1] - k)
+            low = min(nums[0] + k, nums[i + 1] - k)
+            best = min(best, high - low)
+        return best

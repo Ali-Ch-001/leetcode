@@ -38,4 +38,12 @@ Constraints:
 
 class Solution:
     def maxWidthRamp(self, nums: list[int]) -> int:
-        
+        stack = []
+        for i, value in enumerate(nums):
+            if not stack or nums[stack[-1]] > value:
+                stack.append(i)
+        best = 0
+        for j in range(len(nums) - 1, -1, -1):
+            while stack and nums[stack[-1]] <= nums[j]:
+                best = max(best, j - stack.pop())
+        return best

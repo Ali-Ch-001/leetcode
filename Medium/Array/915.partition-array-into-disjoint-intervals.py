@@ -46,4 +46,18 @@ Constraints:
 
 class Solution:
     def partitionDisjoint(self, nums: list[int]) -> int:
-        
+        n = len(nums)
+        max_left = [0] * n
+        current = nums[0]
+        for i in range(n):
+            current = max(current, nums[i])
+            max_left[i] = current
+        min_right = [0] * n
+        current = nums[-1]
+        for i in range(n - 1, -1, -1):
+            current = min(current, nums[i])
+            min_right[i] = current
+        for i in range(1, n):
+            if max_left[i - 1] <= min_right[i]:
+                return i
+        return n

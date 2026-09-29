@@ -67,4 +67,15 @@ https://leetcode.com/problems/lowest-common-ancestor-of-deepest-leaves/
 #         self.right = right
 class Solution:
     def subtreeWithAllDeepest(self, root: TreeNode | None) -> TreeNode | None:
-        
+        def depth(node):
+            if not node:
+                return 0, None
+            left_depth, left_node = depth(node.left)
+            right_depth, right_node = depth(node.right)
+            if left_depth > right_depth:
+                return left_depth + 1, left_node
+            if right_depth > left_depth:
+                return right_depth + 1, right_node
+            return left_depth + 1, node
+
+        return depth(root)[1]

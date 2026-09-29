@@ -46,4 +46,14 @@ Follow Up: Could you solve it in-place?
 
 class Solution:
     def sortArrayByParityII(self, nums: list[int]) -> list[int]:
-        
+        result = [0] * len(nums)
+        even_index = 0
+        odd_index = 1
+        for value in nums:
+            if value % 2 == 0:
+                result[even_index] = value
+                even_index += 2
+            else:
+                result[odd_index] = value
+                odd_index += 2
+        return result

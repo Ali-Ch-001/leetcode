@@ -46,4 +46,15 @@ Constraints:
 #         self.right = right
 class Solution:
     def isCompleteTree(self, root: TreeNode | None) -> bool:
-        
+        queue = [root]
+        seen_none = False
+        while queue:
+            node = queue.pop(0)
+            if not node:
+                seen_none = True
+            else:
+                if seen_none:
+                    return False
+                queue.append(node.left)
+                queue.append(node.right)
+        return True

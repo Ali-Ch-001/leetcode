@@ -72,4 +72,29 @@ Constraints:
 
 class Solution:
     def uniquePathsIII(self, grid: list[list[int]]) -> int:
-        
+        rows, cols = len(grid), len(grid[0])
+        start = end = None
+        empty = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:
+                    start = (r, c)
+                elif grid[r][c] == 2:
+                    end = (r, c)
+                if grid[r][c] != -1:
+                    empty += 1
+        self.count = 0
+
+        def dfs(r, c, remaining):
+            if (r, c) == end:
+                if remaining == 0:
+                    self.count += 1
+                return
+            grid[r][c] = -1
+            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+                if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] != -1:
+                    dfs(nr, nc, remaining - 1)
+            grid[r][c] = 0
+
+        dfs(start[0], start[1], empty - 1)
+        return self.count

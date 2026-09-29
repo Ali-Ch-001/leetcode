@@ -68,6 +68,57 @@ Constraints:
 	• The mouse and the cat can always move.
 """
 
+from collections import deque
+
+
 class Solution:
     def catMouseGame(self, graph: list[list[int]]) -> int:
-        
+        n = len(graph)
+        DRAW, MOUSE, CAT = 0, 1, 2
+        color = [[[DRAW] * 3 for _ in range(n)] for _ in range(n)]
+        degree = [[[0] * 3 for _ in range(n)] for _ in range(n)]
+        for m in range(n):
+            for c in range(n):
+                degree[m][c][1] = len(graph[m])
+                degree[m][c][2] = len(graph[c]) - (1 if 0 in graph[c] else 0)
+        queue = deque()
+        for c in range(n):
+            color[0][c][1] = MOUSE
+            color[0][c][2] = MOUSE
+            queue.append((0, c, 1))
+            queue.append((0, c, 2))
+        for x in range(1, n):
+            color[x][x][1] = CAT
+            color[x][x][2] = CAT
+            queue.append((x, x, 1))
+            queue.append((x, x, 2))
+        while queue:
+            mouse, cat, turn = queue.popleft()
+            current = color[mouse][cat][turn]
+            if turn == 1:
+                for prev in graph[cat]:
+                    if prev == 0:
+                        continue
+                    if color[mouse][prev][2] != DRAW:
+                        continue
+                    if current == CAT:
+                        color[mouse][prev][2] = CAT
+                        queue.append((mouse, prev, 2))
+                    else:
+                        degree[mouse][prev][2] -= 1
+                        if degree[mouse][prev][2] == 0:
+                            color[mouse][prev][2] = MOUSE
+                            queue.append((mouse, prev, 2))
+            else:
+                for prev in graph[mouse]:
+                    if color[prev][cat][1] != DRAW:
+                        continue
+                    if current == MOUSE:
+                        color[prev][cat][1] = MOUSE
+                        queue.append((prev, cat, 1))
+                    else:
+                        degree[prev][cat][1] -= 1
+                        if degree[prev][cat][1] == 0:
+                            color[prev][cat][1] = CAT
+                            queue.append((prev, cat, 1))
+        return color[1][2][1]

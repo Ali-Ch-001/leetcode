@@ -47,4 +47,14 @@ Constraints:
 
 class Solution:
     def findAndReplacePattern(self, words: list[str], pattern: str) -> list[str]:
-        
+        def normalize(word):
+            mapping = {}
+            result = []
+            for ch in word:
+                if ch not in mapping:
+                    mapping[ch] = len(mapping)
+                result.append(mapping[ch])
+            return result
+
+        target = normalize(pattern)
+        return [word for word in words if normalize(word) == target]

@@ -59,4 +59,13 @@ Constraints:
 
 class Solution:
     def camelMatch(self, queries: list[str], pattern: str) -> list[bool]:
-        
+        def matches(query):
+            index = 0
+            for ch in query:
+                if index < len(pattern) and ch == pattern[index]:
+                    index += 1
+                elif ch.isupper():
+                    return False
+            return index == len(pattern)
+
+        return [matches(query) for query in queries]

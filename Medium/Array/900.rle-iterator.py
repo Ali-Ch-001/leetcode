@@ -69,10 +69,23 @@ Constraints:
 class RLEIterator:
 
     def __init__(self, encoding: list[int]):
-        
+        self.encoding = encoding
+        self.index = 0
 
     def next(self, n: int) -> int:
-        
+        while n > 0:
+            if self.index >= len(self.encoding):
+                return -1
+            if self.encoding[self.index] == 0:
+                self.index += 2
+                continue
+            take = min(n, self.encoding[self.index])
+            self.encoding[self.index] -= take
+            n -= take
+            if n == 0:
+                return self.encoding[self.index + 1]
+            self.index += 2
+        return -1
 
 
 # Your RLEIterator object will be instantiated and called as such:

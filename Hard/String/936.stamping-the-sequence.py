@@ -61,6 +61,33 @@ Constraints:
 	• stamp and target consist of lowercase English letters.
 """
 
+from collections import deque
+
+
 class Solution:
     def movesToStamp(self, stamp: str, target: str) -> list[int]:
-        
+        m, n = len(stamp), len(target)
+        text = list(target)
+        queue = deque()
+        done = [False] * n
+        for i in range(n - m + 1):
+            if all(text[i + j] == stamp[j] for j in range(m)):
+                queue.append(i)
+        result = []
+        while queue:
+            i = queue.popleft()
+            if done[i]:
+                continue
+            if all(text[j] == "?" for j in range(i, i + m)):
+                done[i] = True
+                continue
+            done[i] = True
+            result.append(i)
+            for j in range(i, i + m):
+                text[j] = "?"
+            for k in range(max(0, i - m + 1), min(n - m, i + m) + 1):
+                if done[k]:
+                    continue
+                if all(text[k + j] == "?" or text[k + j] == stamp[j] for j in range(m)):
+                    queue.append(k)
+        return result[::-1] if all(ch == "?" for ch in text) else []

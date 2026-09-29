@@ -44,4 +44,18 @@ Constraints:
 
 class Solution:
     def superpalindromesInRange(self, left: str, right: str) -> int:
-        
+        low, high = int(left), int(right)
+        count = 0
+        limit = int(high ** 0.5) + 1
+
+        def is_palindrome(value):
+            text = str(value)
+            return text == text[::-1]
+
+        for root in range(1, min(limit, 100000) + 1):
+            text = str(root)
+            for candidate in (int(text + text[-2::-1]), int(text + text[::-1])):
+                square = candidate * candidate
+                if low <= square <= high and is_palindrome(square):
+                    count += 1
+        return count

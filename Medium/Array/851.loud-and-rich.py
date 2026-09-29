@@ -70,4 +70,21 @@ Constraints:
 
 class Solution:
     def loudAndRich(self, richer: list[list[int]], quiet: list[int]) -> list[int]:
-        
+        n = len(quiet)
+        graph = [[] for _ in range(n)]
+        for a, b in richer:
+            graph[b].append(a)
+        answer = [-1] * n
+
+        def dfs(node):
+            if answer[node] != -1:
+                return answer[node]
+            best = node
+            for rich in graph[node]:
+                candidate = dfs(rich)
+                if quiet[candidate] < quiet[best]:
+                    best = candidate
+            answer[node] = best
+            return best
+
+        return [dfs(i) for i in range(n)]

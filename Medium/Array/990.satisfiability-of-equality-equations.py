@@ -50,4 +50,23 @@ Constraints:
 
 class Solution:
     def equationsPossible(self, equations: list[str]) -> bool:
-        
+        parent = list(range(26))
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        for equation in equations:
+            if equation[1] == "=":
+                a = ord(equation[0]) - 97
+                b = ord(equation[3]) - 97
+                parent[find(a)] = find(b)
+        for equation in equations:
+            if equation[1] == "!":
+                a = ord(equation[0]) - 97
+                b = ord(equation[3]) - 97
+                if find(a) == find(b):
+                    return False
+        return True

@@ -52,4 +52,11 @@ Constraints:
 
 class Solution:
     def isValid(self, s: str) -> bool:
-        
+        stack = []
+        for ch in s:
+            stack.append(ch)
+            if stack[-3:] == ["a", "b", "c"]:
+                stack.pop()
+                stack.pop()
+                stack.pop()
+        return not stack
