@@ -84,8 +84,11 @@ Constraints:
 three or more consecutive balls of the same color.
 """
 
+import re
 from collections import deque
 from functools import lru_cache
+
+PATTERN = re.compile(r"(.)\1{2,}")
 
 
 class Solution:
@@ -93,52 +96,48 @@ class Solution:
         @lru_cache(maxsize=None)
         def shrink(state: str) -> str:
             while True:
-                changed = False
-                out = []
-                i = 0
-                while i < len(state):
-                    j = i
-                    while j < len(state) and state[j] == state[i]:
-                        j += 1
-                    if j - i >= 3:
-                        changed = True
-                    else:
-                        out.append(state[i:j])
-                    i = j
-                state = "".join(out)
-                if not changed:
-                    return state
+                cleaned = PATTERN.sub("", state)
+                if cleaned == state or not cleaned:
+                    return cleaned
+                state = cleaned
 
+        @lru_cache(maxsize=None)
+        def insert_results(current: str, color: str) -> tuple:
+            results = []
+            seen_local = set()
+            for position in range(len(current) + 1):
+                new_board = shrink(current[:position] + color + current[position:])
+                if new_board != current and new_board not in seen_local:
+                    seen_local.add(new_board)
+                    results.append(new_board)
+            return tuple(results)
+
+        start = shrink(board)
         hand_sorted = "".join(sorted(hand))
-        queue = deque([(board, hand_sorted, 0)])
-        seen = {(shrink(board), hand_sorted)}
+        queue = deque([(start, hand_sorted, 0)])
+        seen = {(start, hand_sorted)}
+        push = seen.add
+        append = queue.append
+        pop = queue.popleft
         while queue:
-            current, remaining, steps = queue.popleft()
-            current = shrink(current)
+            current, remaining, steps = pop()
             if not current:
                 return steps
-            present = set(current)
-            for index in range(len(remaining)):
-                if index > 0 and remaining[index] == remaining[index - 1]:
+            board_colors = set(current)
+            dead = False
+            for color in board_colors:
+                if current.count(color) + remaining.count(color) < 3:
+                    dead = True
+                    break
+            if dead:
+                continue
+            for color in set(remaining):
+                if color not in board_colors and remaining.count(color) < 3:
                     continue
-                color = remaining[index]
-                if color not in present:
-                    continue
-                new_hand = remaining[:index] + remaining[index + 1:]
-                positions = [i for i in range(len(current)) if current[i] == color]
-                positions += [
-                    i
-                    for i in range(1, len(current))
-                    if current[i - 1] == current[i] and current[i] != color
-                ]
-                results = set()
-                for position in sorted(set(positions)):
-                    new_board = shrink(current[:position] + color + current[position:])
-                    if new_board == current or new_board in results:
-                        continue
-                    results.add(new_board)
+                new_hand = remaining.replace(color, "", 1)
+                for new_board in insert_results(current, color):
                     state = (new_board, new_hand)
                     if state not in seen:
-                        seen.add(state)
-                        queue.append((new_board, new_hand, steps + 1))
+                        push(state)
+                        append((new_board, new_hand, steps + 1))
         return -1
