@@ -103,14 +103,36 @@ class Solution:
 
         @lru_cache(maxsize=None)
         def insert_results(current: str, color: str) -> tuple:
+            n = len(current)
             results = []
             seen_local = set()
-            for position in range(len(current) + 1):
-                new_board = shrink(current[:position] + color + current[position:])
-                if new_board != current and new_board not in seen_local:
-                    seen_local.add(new_board)
-                    results.append(new_board)
+            for position in range(n + 1):
+                candidate = current[:position] + color + current[position:]
+                left = current[position - 1] if position else ""
+                right = current[position] if position < n else ""
+                if left == color:
+                    if right == color or (position >= 2 and current[position - 2] == color):
+                        candidate = shrink(candidate)
+                        if candidate == current:
+                            continue
+                elif right == color and position + 1 < n and current[position + 1] == color:
+                    candidate = shrink(candidate)
+                    if candidate == current:
+                        continue
+                if candidate not in seen_local:
+                    seen_local.add(candidate)
+                    results.append(candidate)
             return tuple(results)
+
+        hand_cache = {}
+
+        def hand_sets(remaining: str):
+            info = hand_cache.get(remaining)
+            if info is None:
+                colors = set(remaining)
+                info = (colors, {c: remaining.count(c) for c in colors})
+                hand_cache[remaining] = info
+            return info
 
         start = shrink(board)
         hand_sorted = "".join(sorted(hand))
@@ -131,8 +153,9 @@ class Solution:
                     break
             if dead:
                 continue
-            for color in set(remaining):
-                if color not in board_colors and remaining.count(color) < 3:
+            colors, counts = hand_sets(remaining)
+            for color in colors:
+                if color not in board_colors and counts[color] < 3:
                     continue
                 new_hand = remaining.replace(color, "", 1)
                 for new_board in insert_results(current, color):
