@@ -108,6 +108,8 @@ class DinnerPlates:
             self.stacks[idx].append(val)
             if len(self.stacks[idx]) < self.capacity:
                 heapq.heappush(self.free, idx)
+            if idx > self.right:
+                self.right = idx
         else:
             self.right += 1
             self.stacks[self.right] = [val]
