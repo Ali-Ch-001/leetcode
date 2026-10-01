@@ -52,28 +52,29 @@ import math
 
 class Solution:
     def getMinDistSum(self, positions: list[list[int]]) -> float:
-        n = len(positions)
-        x = sum(p[0] for p in positions) / n
-        y = sum(p[1] for p in positions) / n
-        for _ in range(200):
-            num_x = num_y = den = 0.0
-            hit = None
-            for px, py in positions:
-                d = math.hypot(px - x, py - y)
-                if d < 1e-12:
-                    hit = (px, py)
-                    break
-                w = 1.0 / d
-                num_x += px * w
-                num_y += py * w
-                den += w
-            if hit is not None:
-                x, y = hit
-                break
-            nx, ny = num_x / den, num_y / den
-            if math.hypot(nx - x, ny - y) < 1e-11:
-                x, y = nx, ny
-                break
-            x, y = nx, ny
-        return sum(math.hypot(px - x, py - y) for px, py in positions)
+        pts = positions
+
+        def total(x, y):
+            return sum(math.hypot(x - px, y - py) for px, py in pts)
+
+        def best_y(x):
+            lo, hi = 0.0, 100.0
+            for _ in range(70):
+                m1 = lo + (hi - lo) / 3
+                m2 = hi - (hi - lo) / 3
+                if total(x, m1) < total(x, m2):
+                    hi = m2
+                else:
+                    lo = m1
+            return total(x, (lo + hi) / 2)
+
+        lo, hi = 0.0, 100.0
+        for _ in range(70):
+            m1 = lo + (hi - lo) / 3
+            m2 = hi - (hi - lo) / 3
+            if best_y(m1) < best_y(m2):
+                hi = m2
+            else:
+                lo = m1
+        return best_y((lo + hi) / 2)
 
