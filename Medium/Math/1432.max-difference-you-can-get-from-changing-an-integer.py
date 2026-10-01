@@ -63,7 +63,7 @@ class Solution:
         else:
             min_s = s
             for ch in s[1:]:
-                if ch != '0':
+                if ch != '0' and ch != '1':
                     min_s = s.replace(ch, '0')
                     break
         return int(max_s) - int(min_s)
