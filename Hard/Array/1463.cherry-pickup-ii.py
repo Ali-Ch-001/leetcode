@@ -80,7 +80,6 @@ class Solution:
                     cur = dp[c1][c2]
                     if cur == NEG:
                         continue
-                    gain = grid[r][c1] + (grid[r][c2] if c2 != c1 else 0)
                     for d1 in (-1, 0, 1):
                         nc1 = c1 + d1
                         if nc1 < 0 or nc1 >= cols:
@@ -89,6 +88,7 @@ class Solution:
                             nc2 = c2 + d2
                             if nc2 < 0 or nc2 >= cols:
                                 continue
+                            gain = grid[r][nc1] + (grid[r][nc2] if nc1 != nc2 else 0)
                             val = cur + gain
                             if val > ndp[nc1][nc2]:
                                 ndp[nc1][nc2] = val
