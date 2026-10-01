@@ -60,24 +60,15 @@ Constraints:
 class Solution:
     def minInsertions(self, s: str) -> int:
         ans = 0
-        open_count = 0
-        i = 0
-        n = len(s)
-        while i < n:
-            if s[i] == "(":
-                open_count += 1
-            elif i + 1 < n and s[i + 1] == ")":
-                if open_count > 0:
-                    open_count -= 1
-                else:
-                    ans += 1
-                i += 1
+        need = 0
+        for c in s:
+            if c == "(":
+                need += 2
             else:
-                if open_count > 0:
-                    open_count -= 1
-                    ans += 1
+                if need > 0:
+                    need -= 1
                 else:
-                    ans += 2
-            i += 1
-        return ans + open_count * 2
+                    ans += 1
+                    need = 1
+        return ans + need
 
