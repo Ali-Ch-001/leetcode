@@ -64,10 +64,12 @@ class Solution:
         for c in s:
             if c == "(":
                 need += 2
-            else:
-                if need > 0:
+                if need % 2 == 1:
+                    ans += 1
                     need -= 1
-                else:
+            else:
+                need -= 1
+                if need == -1:
                     ans += 1
                     need = 1
         return ans + need
