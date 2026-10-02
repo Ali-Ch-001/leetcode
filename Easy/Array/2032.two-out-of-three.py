@@ -44,4 +44,5 @@ Constraints:
 
 class Solution:
     def twoOutOfThree(self, nums1: list[int], nums2: list[int], nums3: list[int]) -> list[int]:
-        
+        s1, s2, s3 = set(nums1), set(nums2), set(nums3)
+        return [x for x in s1 | s2 | s3 if (x in s1) + (x in s2) + (x in s3) >= 2]

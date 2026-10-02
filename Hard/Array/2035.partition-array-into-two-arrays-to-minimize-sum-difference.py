@@ -49,6 +49,40 @@ Constraints:
 	• -10^7 <= nums[i] <= 10^7
 """
 
+from bisect import bisect_left
+
+
 class Solution:
     def minimumDifference(self, nums: list[int]) -> int:
-        
+        n = len(nums) // 2
+        total = sum(nums)
+
+        def subset_sums(arr):
+            size = len(arr)
+            sums = [[] for _ in range(size + 1)]
+            for mask in range(1 << size):
+                s = 0
+                cnt = 0
+                for i in range(size):
+                    if mask >> i & 1:
+                        s += arr[i]
+                        cnt += 1
+                sums[cnt].append(s)
+            return sums
+
+        left_sums = subset_sums(nums[:n])
+        right_sums = subset_sums(nums[n:])
+        for lst in right_sums:
+            lst.sort()
+
+        best = float('inf')
+        for i in range(n + 1):
+            lst = right_sums[n - i]
+            for s1 in left_sums[i]:
+                target = (total - 2 * s1) / 2
+                pos = bisect_left(lst, target)
+                if pos < len(lst):
+                    best = min(best, abs(total - 2 * (s1 + lst[pos])))
+                if pos > 0:
+                    best = min(best, abs(total - 2 * (s1 + lst[pos - 1])))
+        return best

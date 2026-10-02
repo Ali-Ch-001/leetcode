@@ -86,22 +86,36 @@ maximum, and minimum.
 been called at least once.
 """
 
+import heapq
+
+
 class StockPrice:
 
     def __init__(self):
-        
+        self.prices = {}
+        self.latest = 0
+        self.max_heap = []
+        self.min_heap = []
 
     def update(self, timestamp: int, price: int) -> None:
-        
+        self.prices[timestamp] = price
+        if timestamp > self.latest:
+            self.latest = timestamp
+        heapq.heappush(self.max_heap, (-price, timestamp))
+        heapq.heappush(self.min_heap, (price, timestamp))
 
     def current(self) -> int:
-        
+        return self.prices[self.latest]
 
     def maximum(self) -> int:
-        
+        while -self.max_heap[0][0] != self.prices[self.max_heap[0][1]]:
+            heapq.heappop(self.max_heap)
+        return -self.max_heap[0][0]
 
     def minimum(self) -> int:
-        
+        while self.min_heap[0][0] != self.prices[self.min_heap[0][1]]:
+            heapq.heappop(self.min_heap)
+        return self.min_heap[0][0]
 
 
 # Your StockPrice object will be instantiated and called as such:

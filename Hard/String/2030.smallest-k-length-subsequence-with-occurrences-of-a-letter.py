@@ -61,6 +61,26 @@ Constraints:
 repetition times.
 """
 
+from collections import Counter
+
+
 class Solution:
     def smallestSubsequence(self, s: str, k: int, letter: str, repetition: int) -> str:
-        
+        n = len(s)
+        rem = Counter(s)
+        stack = []
+        in_stack = 0
+        for i, c in enumerate(s):
+            rem[c] -= 1
+            while stack and stack[-1] > c and len(stack) + (n - i - 1) >= k:
+                if stack[-1] == letter:
+                    need = (in_stack - 1) + (1 if c == letter else 0) + rem[letter]
+                    if need < repetition:
+                        break
+                if stack.pop() == letter:
+                    in_stack -= 1
+            if len(stack) < k:
+                stack.append(c)
+                if c == letter:
+                    in_stack += 1
+        return ''.join(stack)
