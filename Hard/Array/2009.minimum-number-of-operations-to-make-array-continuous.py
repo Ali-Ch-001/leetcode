@@ -57,4 +57,11 @@ Constraints:
 
 class Solution:
     def minOperations(self, nums: list[int]) -> int:
-        
+        from bisect import bisect_right
+        n = len(nums)
+        uniq = sorted(set(nums))
+        best = n
+        for i, v in enumerate(uniq):
+            j = bisect_right(uniq, v + n - 1)
+            best = min(best, n - (j - i))
+        return best
