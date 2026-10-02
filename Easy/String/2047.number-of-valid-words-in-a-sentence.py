@@ -77,10 +77,10 @@ class Solution:
                     return False
                 if not (t[i - 1].islower() and t[i + 1].islower()):
                     return False
-            punct = [p for p in '!.,' if p in t]
-            if len(punct) > 1:
+            puncts = sum(t.count(p) for p in '!.,')
+            if puncts > 1:
                 return False
-            if punct and t[-1] != punct[0]:
+            if puncts == 1 and t[-1] not in '!.,':
                 return False
             return True
 
