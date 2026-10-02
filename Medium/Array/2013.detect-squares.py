@@ -73,13 +73,27 @@ Constraints:
 class DetectSquares:
 
     def __init__(self):
-        
+        self.by_x = {}
 
     def add(self, point: list[int]) -> None:
-        
+        x, y = point
+        col = self.by_x.setdefault(x, {})
+        col[y] = col.get(y, 0) + 1
 
     def count(self, point: list[int]) -> int:
-        
+        x, y = point
+        if x not in self.by_x:
+            return 0
+        total = 0
+        for px, col in self.by_x.items():
+            if px == x:
+                continue
+            side = px - x if px > x else x - px
+            for py in (y - side, y + side):
+                cy = col.get(py, 0)
+                if cy:
+                    total += cy * col.get(y, 0) * self.by_x[x].get(py, 0)
+        return total
 
 
 # Your DetectSquares object will be instantiated and called as such:

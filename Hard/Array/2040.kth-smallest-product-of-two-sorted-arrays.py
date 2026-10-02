@@ -55,6 +55,30 @@ Constraints:
 	• nums1 and nums2 are sorted.
 """
 
+from bisect import bisect_left, bisect_right
+
+
 class Solution:
     def kthSmallestProduct(self, nums1: list[int], nums2: list[int], k: int) -> int:
-        
+        n2 = len(nums2)
+
+        def count_le(v: int) -> int:
+            total = 0
+            for a in nums1:
+                if a > 0:
+                    total += bisect_right(nums2, v // a)
+                elif a < 0:
+                    threshold = -(v // (-a))
+                    total += n2 - bisect_left(nums2, threshold)
+                elif v >= 0:
+                    total += n2
+            return total
+
+        lo, hi = -10 ** 10, 10 ** 10
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if count_le(mid) >= k:
+                hi = mid
+            else:
+                lo = mid + 1
+        return lo

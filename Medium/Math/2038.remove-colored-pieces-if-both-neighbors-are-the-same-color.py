@@ -80,6 +80,18 @@ Constraints:
 	• colors consists of only the letters 'A' and 'B'
 """
 
+from itertools import groupby
+
+
 class Solution:
     def winnerOfGame(self, colors: str) -> bool:
-        
+        alice = 0
+        bob = 0
+        for ch, grp in groupby(colors):
+            length = sum(1 for _ in grp)
+            if length >= 3:
+                if ch == 'A':
+                    alice += length - 2
+                else:
+                    bob += length - 2
+        return alice > bob

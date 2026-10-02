@@ -59,4 +59,14 @@ Constraints:
 
 class Solution:
     def countMaxOrSubsets(self, nums: list[int]) -> int:
-        
+        best = 0
+        for v in nums:
+            best |= v
+        dp = {0: 1}
+        for v in nums:
+            ndp = dict(dp)
+            for k, c in dp.items():
+                nk = k | v
+                ndp[nk] = ndp.get(nk, 0) + c
+            dp = ndp
+        return dp[best]

@@ -68,4 +68,11 @@ leading zeros.
 
 class Solution:
     def areNumbersAscending(self, s: str) -> bool:
-        
+        prev = -1
+        for tok in s.split():
+            if tok[0].isdigit():
+                v = int(tok)
+                if v <= prev:
+                    return False
+                prev = v
+        return True

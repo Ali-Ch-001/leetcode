@@ -88,4 +88,22 @@ Constraints:
 
 class Solution:
     def countPyramids(self, grid: list[list[int]]) -> int:
-        
+        m, n = len(grid), len(grid[0])
+
+        def count(g):
+            dp = [[0] * n for _ in range(m)]
+            total = 0
+            for r in range(m):
+                prev = dp[r - 1] if r > 0 else None
+                for c in range(n):
+                    if g[r][c]:
+                        if r == 0:
+                            dp[r][c] = 1
+                        else:
+                            left = prev[c - 1] if c > 0 else 0
+                            right = prev[c + 1] if c + 1 < n else 0
+                            dp[r][c] = 1 + min(left, prev[c], right)
+                        total += dp[r][c] - 1
+            return total
+
+        return count(grid) + count(grid[::-1])

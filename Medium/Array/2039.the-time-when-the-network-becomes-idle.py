@@ -114,6 +114,31 @@ Constraints:
 	• Each server can directly or indirectly reach another server.
 """
 
+from collections import deque
+
+
 class Solution:
     def networkBecomesIdle(self, edges: list[list[int]], patience: list[int]) -> int:
-        
+        n = len(patience)
+        g = [[] for _ in range(n)]
+        for u, v in edges:
+            g[u].append(v)
+            g[v].append(u)
+
+        dist = [-1] * n
+        dist[0] = 0
+        q = deque([0])
+        while q:
+            u = q.popleft()
+            for v in g[u]:
+                if dist[v] == -1:
+                    dist[v] = dist[u] + 1
+                    q.append(v)
+
+        ans = 0
+        for i in range(1, n):
+            d = dist[i]
+            p = patience[i]
+            last_send = ((2 * d - 1) // p) * p
+            ans = max(ans, last_send + 2 * d + 1)
+        return ans

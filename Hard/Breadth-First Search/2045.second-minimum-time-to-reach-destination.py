@@ -93,6 +93,38 @@ vertex.
 	• 1 <= time, change <= 10^3
 """
 
+from collections import deque
+
+
 class Solution:
     def secondMinimum(self, n: int, edges: list[list[int]], time: int, change: int) -> int:
-        
+        g = [[] for _ in range(n + 1)]
+        for u, v in edges:
+            g[u].append(v)
+            g[v].append(u)
+
+        INF = float('inf')
+        dist = [[INF, INF] for _ in range(n + 1)]
+        dist[1][0] = 0
+        q = deque([(1, 0)])
+        while q:
+            u, layer = q.popleft()
+            nd = dist[u][layer] + 1
+            for v in g[u]:
+                if nd < dist[v][0]:
+                    dist[v][1] = dist[v][0]
+                    dist[v][0] = nd
+                    q.append((v, 0))
+                    if dist[v][1] < INF:
+                        q.append((v, 1))
+                elif dist[v][0] < nd < dist[v][1]:
+                    dist[v][1] = nd
+                    q.append((v, 1))
+
+        steps = dist[n][1]
+        t = 0
+        for _ in range(steps):
+            if (t // change) % 2 == 1:
+                t = (t // change + 1) * change
+            t += time
+        return t

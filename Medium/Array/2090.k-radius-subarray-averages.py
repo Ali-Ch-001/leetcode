@@ -71,4 +71,15 @@ Constraints:
 
 class Solution:
     def getAverages(self, nums: list[int], k: int) -> list[int]:
-        
+        n = len(nums)
+        pre = [0] * (n + 1)
+        for i, v in enumerate(nums):
+            pre[i + 1] = pre[i] + v
+        d = 2 * k + 1
+        res = []
+        for i in range(n):
+            if i - k >= 0 and i + k < n:
+                res.append((pre[i + k + 1] - pre[i - k]) // d)
+            else:
+                res.append(-1)
+        return res

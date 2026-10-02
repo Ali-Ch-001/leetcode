@@ -62,4 +62,42 @@ Constraints:
 
 class Solution:
     def longestSubsequenceRepeatedK(self, s: str, k: int) -> str:
-        
+        n = len(s)
+        freq = [0] * 26
+        for c in s:
+            freq[ord(c) - 97] += 1
+        allowed = [chr(97 + i) for i in range(25, -1, -1) if freq[i] >= k]
+        if not allowed:
+            return ""
+
+        nxt = [[n] * 26 for _ in range(n + 1)]
+        for i in range(n - 1, -1, -1):
+            row = nxt[i + 1][:]
+            row[ord(s[i]) - 97] = i
+            nxt[i] = row
+
+        def is_rep(seq):
+            pos = 0
+            for _ in range(k):
+                for c in seq:
+                    idx = nxt[pos][ord(c) - 97]
+                    if idx == n:
+                        return False
+                    pos = idx + 1
+            return True
+
+        max_len = n // k
+        current = [""]
+        answer = ""
+        for _ in range(max_len):
+            nxt_level = []
+            for prefix in current:
+                for c in allowed:
+                    cand = prefix + c
+                    if is_rep(cand):
+                        nxt_level.append(cand)
+            if not nxt_level:
+                break
+            answer = max(nxt_level)
+            current = nxt_level
+        return answer

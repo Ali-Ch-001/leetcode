@@ -66,4 +66,22 @@ Constraints:
 
 class Solution:
     def countValidWords(self, sentence: str) -> int:
-        
+        def valid(t: str) -> bool:
+            if any(c.isdigit() for c in t):
+                return False
+            if t.count('-') > 1:
+                return False
+            if '-' in t:
+                i = t.index('-')
+                if i == 0 or i == len(t) - 1:
+                    return False
+                if not (t[i - 1].islower() and t[i + 1].islower()):
+                    return False
+            punct = [p for p in '!.,' if p in t]
+            if len(punct) > 1:
+                return False
+            if punct and t[-1] != punct[0]:
+                return False
+            return True
+
+        return sum(1 for tok in sentence.split() if valid(tok))

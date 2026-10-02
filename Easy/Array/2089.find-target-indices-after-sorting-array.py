@@ -48,4 +48,6 @@ Constraints:
 
 class Solution:
     def targetIndices(self, nums: list[int], target: int) -> list[int]:
-        
+        less = sum(1 for x in nums if x < target)
+        cnt = nums.count(target)
+        return list(range(less, less + cnt))
