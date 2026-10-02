@@ -83,4 +83,9 @@ Constraints:
 
 class Solution:
     def timeRequiredToBuy(self, tickets: list[int], k: int) -> int:
-        
+        target = tickets[k]
+        total = 0
+        for i, t in enumerate(tickets):
+            total += min(t, target if i <= k else target - 1)
+        return total
+

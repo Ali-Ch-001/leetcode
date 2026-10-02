@@ -61,26 +61,48 @@ Constraints:
 repetition times.
 """
 
-from collections import Counter
+from bisect import bisect_left
 
 
 class Solution:
     def smallestSubsequence(self, s: str, k: int, letter: str, repetition: int) -> str:
         n = len(s)
-        rem = Counter(s)
-        stack = []
-        in_stack = 0
+        positions = {}
         for i, c in enumerate(s):
-            rem[c] -= 1
-            while stack and stack[-1] > c and len(stack) + (n - i - 1) >= k:
-                if stack[-1] == letter:
-                    need = (in_stack - 1) + (1 if c == letter else 0) + rem[letter]
-                    if need < repetition:
-                        break
-                if stack.pop() == letter:
-                    in_stack -= 1
-            if len(stack) < k:
-                stack.append(c)
-                if c == letter:
-                    in_stack += 1
-        return ''.join(stack)
+            positions.setdefault(c, []).append(i)
+
+        suffix_letter = [0] * (n + 1)
+        for i in range(n - 1, -1, -1):
+            suffix_letter[i] = suffix_letter[i + 1] + (1 if s[i] == letter else 0)
+
+        res = []
+        start = 0
+        need_len = k
+        need_letter = repetition
+        while need_len > 0:
+            max_p = n - need_len
+            for code in range(26):
+                ch = chr(97 + code)
+                lst = positions.get(ch)
+                if not lst:
+                    continue
+                idx = bisect_left(lst, start)
+                if idx == len(lst):
+                    continue
+                p = lst[idx]
+                if p > max_p:
+                    continue
+                needed_after = need_letter - (1 if ch == letter else 0)
+                if needed_after > suffix_letter[p + 1]:
+                    continue
+                if needed_after > need_len - 1:
+                    continue
+                res.append(ch)
+                start = p + 1
+                need_len -= 1
+                if ch == letter:
+                    need_letter -= 1
+                break
+            else:
+                break
+        return ''.join(res)

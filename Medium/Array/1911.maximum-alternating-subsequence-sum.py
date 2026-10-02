@@ -85,5 +85,12 @@ Constraints:
 	• 1 <= nums[i] <= 10^5
 """
 
+from typing import List
+
+
 class Solution:
     def maxAlternatingSum(self, nums: List[int]) -> int:
+        up = down = 0
+        for x in nums:
+            up, down = max(up, down + x), max(down, up - x)
+        return up

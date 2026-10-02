@@ -73,4 +73,10 @@ Constraints:
 
 class Solution:
     def sumGame(self, num: str) -> bool:
-        
+        h = len(num) // 2
+        left, right = num[:h], num[h:]
+        sl = sum(int(c) for c in left if c != '?')
+        sr = sum(int(c) for c in right if c != '?')
+        ql = left.count('?')
+        qr = right.count('?')
+        return (sl - sr) * 2 != (qr - ql) * 9

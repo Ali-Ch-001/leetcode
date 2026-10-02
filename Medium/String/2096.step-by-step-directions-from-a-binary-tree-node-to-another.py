@@ -64,4 +64,31 @@ Constraints:
 #         self.right = right
 class Solution:
     def getDirections(self, root: TreeNode | None, startValue: int, destValue: int) -> str:
-        
+        parent = {root.val: (None, None)}
+        stack = [root]
+        while stack:
+            node = stack.pop()
+            if node.left:
+                parent[node.left.val] = (node.val, 'L')
+                stack.append(node.left)
+            if node.right:
+                parent[node.right.val] = (node.val, 'R')
+                stack.append(node.right)
+
+        def path_to(val):
+            path = []
+            while val is not None:
+                path.append(val)
+                val = parent[val][0]
+            path.reverse()
+            return path
+
+        ps = path_to(startValue)
+        pd = path_to(destValue)
+        i = 0
+        while i < len(ps) and i < len(pd) and ps[i] == pd[i]:
+            i += 1
+        res = ['U'] * (len(ps) - i)
+        for j in range(i, len(pd)):
+            res.append(parent[pd[j]][1])
+        return ''.join(res)

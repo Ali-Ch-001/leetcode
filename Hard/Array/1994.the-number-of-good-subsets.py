@@ -68,4 +68,35 @@ Constraints:
 
 class Solution:
     def numberOfGoodSubsets(self, nums: list[int]) -> int:
-        
+        MOD = 10**9 + 7
+        primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+        freq = [0] * 31
+        for x in nums:
+            freq[x] += 1
+        masks = {}
+        for v in range(2, 31):
+            if freq[v] == 0:
+                continue
+            m = 0
+            x = v
+            ok = True
+            for i, p in enumerate(primes):
+                if x % p == 0:
+                    x //= p
+                    if x % p == 0:
+                        ok = False
+                        break
+                    m |= 1 << i
+            if ok:
+                masks[v] = m
+        dp = [0] * (1 << 10)
+        dp[0] = 1
+        for v, m in masks.items():
+            f = freq[v]
+            for mask in range((1 << 10) - 1, -1, -1):
+                if dp[mask] and not (mask & m):
+                    dp[mask | m] = (dp[mask | m] + dp[mask] * f) % MOD
+        ans = (sum(dp) - dp[0]) % MOD
+        ans = ans * pow(2, freq[1], MOD) % MOD
+        return ans
+

@@ -75,4 +75,52 @@ of expression).
 
 class Solution:
     def minOperationsToFlip(self, expression: str) -> int:
-        
+        ops = []
+        vals = []
+
+        def combine(left, right, op):
+            v1, d1 = left
+            v2, d2 = right
+            if op == '&':
+                v = v1 & v2
+                if v == 0:
+                    m1 = 0 if v1 == 1 else d1
+                    m2 = 0 if v2 == 1 else d2
+                    d = min(m1 + m2, 1 + min(m1, m2))
+                else:
+                    m1 = 0 if v1 == 0 else d1
+                    m2 = 0 if v2 == 0 else d2
+                    d = min(min(m1, m2), 1 + m1 + m2)
+            else:
+                v = v1 | v2
+                if v == 0:
+                    m1 = 0 if v1 == 1 else d1
+                    m2 = 0 if v2 == 1 else d2
+                    d = min(min(m1, m2), 1 + m1 + m2)
+                else:
+                    m1 = 0 if v1 == 0 else d1
+                    m2 = 0 if v2 == 0 else d2
+                    d = min(m1 + m2, 1 + min(m1, m2))
+            return (v, d)
+
+        for ch in expression:
+            if ch == '(':
+                ops.append(ch)
+            elif ch == ')':
+                ops.pop()
+                if ops and ops[-1] != '(':
+                    op = ops.pop()
+                    b = vals.pop()
+                    a = vals.pop()
+                    vals.append(combine(a, b, op))
+            elif ch in '&|':
+                ops.append(ch)
+            else:
+                vals.append((int(ch), 1))
+                if ops and ops[-1] != '(':
+                    op = ops.pop()
+                    b = vals.pop()
+                    a = vals.pop()
+                    vals.append(combine(a, b, op))
+
+        return vals[-1][1]

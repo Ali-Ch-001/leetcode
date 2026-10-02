@@ -66,4 +66,62 @@ the root.
 
 class Solution:
     def maxGeneticDifference(self, parents: list[int], queries: list[list[int]]) -> list[int]:
-        
+        n = len(parents)
+        root = -1
+        children = [[] for _ in range(n)]
+        for i, p in enumerate(parents):
+            if p == -1:
+                root = i
+            else:
+                children[p].append(i)
+        qat = [[] for _ in range(n)]
+        for qi, (node, val) in enumerate(queries):
+            qat[node].append((val, qi))
+        ans = [0] * len(queries)
+        trie = [[0, 0, 0]]
+        BITS = 18
+
+        def insert(x):
+            node = 0
+            for b in range(BITS, -1, -1):
+                bit = (x >> b) & 1
+                nxt = trie[node][bit]
+                if nxt == 0:
+                    trie.append([0, 0, 0])
+                    nxt = len(trie) - 1
+                    trie[node][bit] = nxt
+                node = nxt
+                trie[node][2] += 1
+
+        def remove(x):
+            node = 0
+            for b in range(BITS, -1, -1):
+                node = trie[node][(x >> b) & 1]
+                trie[node][2] -= 1
+
+        def query(x):
+            node = 0
+            res = 0
+            for b in range(BITS, -1, -1):
+                bit = (x >> b) & 1
+                nxt = trie[node][1 - bit]
+                if nxt and trie[nxt][2] > 0:
+                    res |= 1 << b
+                    node = nxt
+                else:
+                    node = trie[node][bit]
+            return res
+
+        stack = [(root, False)]
+        while stack:
+            node, exiting = stack.pop()
+            if exiting:
+                remove(node)
+            else:
+                insert(node)
+                for val, qi in qat[node]:
+                    ans[qi] = query(val)
+                stack.append((node, True))
+                for c in children[node]:
+                    stack.append((c, False))
+        return ans

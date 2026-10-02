@@ -52,4 +52,17 @@ Constraints:
 
 class Solution:
     def findPeakGrid(self, mat: list[list[int]]) -> list[int]:
-        
+        m, n = len(mat), len(mat[0])
+        lo, hi = 0, n - 1
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            row = max(range(m), key=lambda r: mat[r][mid])
+            left = mat[row][mid - 1] if mid > 0 else -1
+            right = mat[row][mid + 1] if mid + 1 < n else -1
+            if left > mat[row][mid]:
+                hi = mid - 1
+            elif right > mat[row][mid]:
+                lo = mid + 1
+            else:
+                return [row, mid]
+        return [0, 0]

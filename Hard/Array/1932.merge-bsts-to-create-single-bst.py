@@ -92,6 +92,44 @@ Constraints:
 #         self.val = val
 #         self.left = left
 #         self.right = right
+from typing import List, Optional
+
+
 class Solution:
     def canMerge(self, trees: List[TreeNode]) -> Optional[TreeNode]:
-        
+        roots = {t.val: t for t in trees}
+        total = 0
+        for t in trees:
+            total += 1
+            if t.left:
+                total += 1
+            if t.right:
+                total += 1
+        consumed = set()
+        for t in trees:
+            for ch in (t.left, t.right):
+                if ch is not None and ch.val in roots:
+                    if ch.val in consumed:
+                        return None
+                    r = roots[ch.val]
+                    ch.left = r.left
+                    ch.right = r.right
+                    consumed.add(ch.val)
+        cands = [t for t in trees if t.val not in consumed]
+        if len(cands) != 1:
+            return None
+        root = cands[0]
+        seen = 0
+        stack = [(root, None, None)]
+        while stack:
+            node, lo, hi = stack.pop()
+            if node is None:
+                continue
+            if lo is not None and node.val <= lo:
+                return None
+            if hi is not None and node.val >= hi:
+                return None
+            seen += 1
+            stack.append((node.left, lo, node.val))
+            stack.append((node.right, node.val, hi))
+        return root if seen == total - len(consumed) else None

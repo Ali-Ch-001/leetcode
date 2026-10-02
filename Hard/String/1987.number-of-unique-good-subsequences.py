@@ -58,4 +58,15 @@ Constraints:
 
 class Solution:
     def numberOfUniqueGoodSubsequences(self, binary: str) -> int:
-        
+        MOD = 10**9 + 7
+        ones = 0
+        zeros = 0
+        has_zero = False
+        for c in binary:
+            if c == '1':
+                ones = (ones + zeros + 1) % MOD
+            else:
+                zeros = (zeros + ones) % MOD
+                has_zero = True
+        return (ones + zeros + has_zero) % MOD
+

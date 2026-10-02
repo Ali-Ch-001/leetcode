@@ -57,6 +57,15 @@ Constraints:
 	• 0 <= digits[i] <= 9
 """
 
+from collections import Counter
+
+
 class Solution:
     def findEvenNumbers(self, digits: list[int]) -> list[int]:
-        
+        cnt = Counter(digits)
+        res = []
+        for x in range(100, 1000, 2):
+            need = Counter((x // 100, (x // 10) % 10, x % 10))
+            if all(cnt[d] >= need[d] for d in need):
+                res.append(x)
+        return res

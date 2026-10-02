@@ -105,16 +105,52 @@ upgrade.
 class LockingTree:
 
     def __init__(self, parent: list[int]):
-        
+        self.parent = parent
+        self.n = len(parent)
+        self.children = [[] for _ in range(self.n)]
+        for i in range(1, self.n):
+            self.children[parent[i]].append(i)
+        self.locked = [0] * self.n
 
     def lock(self, num: int, user: int) -> bool:
-        
+        if self.locked[num] == 0:
+            self.locked[num] = user
+            return True
+        return False
 
     def unlock(self, num: int, user: int) -> bool:
-        
+        if self.locked[num] == user:
+            self.locked[num] = 0
+            return True
+        return False
 
     def upgrade(self, num: int, user: int) -> bool:
-        
+        if self.locked[num] != 0:
+            return False
+        p = self.parent[num]
+        while p != -1:
+            if self.locked[p] != 0:
+                return False
+            p = self.parent[p]
+        stack = [num]
+        found = False
+        while stack:
+            x = stack.pop()
+            for c in self.children[x]:
+                if self.locked[c] != 0:
+                    found = True
+                stack.append(c)
+        if not found:
+            return False
+        stack = [num]
+        while stack:
+            x = stack.pop()
+            for c in self.children[x]:
+                self.locked[c] = 0
+                stack.append(c)
+        self.locked[num] = user
+        return True
+
 
 
 # Your LockingTree object will be instantiated and called as such:

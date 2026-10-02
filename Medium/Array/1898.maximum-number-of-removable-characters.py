@@ -69,4 +69,23 @@ Constraints:
 
 class Solution:
     def maximumRemovals(self, s: str, p: str, removable: list[int]) -> int:
-        
+        def ok(k):
+            removed = set(removable[:k])
+            it = 0
+            for i, ch in enumerate(s):
+                if i in removed:
+                    continue
+                if it < len(p) and ch == p[it]:
+                    it += 1
+                    if it == len(p):
+                        return True
+            return it == len(p)
+
+        lo, hi = 0, len(removable)
+        while lo < hi:
+            mid = (lo + hi + 1) // 2
+            if ok(mid):
+                lo = mid
+            else:
+                hi = mid - 1
+        return lo

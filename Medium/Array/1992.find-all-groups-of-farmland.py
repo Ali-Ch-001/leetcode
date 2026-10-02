@@ -70,4 +70,21 @@ Constraints:
 
 class Solution:
     def findFarmland(self, land: list[list[int]]) -> list[list[int]]:
-        
+        m, n = len(land), len(land[0])
+        ans = []
+        for i in range(m):
+            for j in range(n):
+                if land[i][j] != 1:
+                    continue
+                if i > 0 and land[i - 1][j] == 1:
+                    continue
+                if j > 0 and land[i][j - 1] == 1:
+                    continue
+                r2, c2 = i, j
+                while r2 + 1 < m and land[r2 + 1][j] == 1:
+                    r2 += 1
+                while c2 + 1 < n and land[i][c2 + 1] == 1:
+                    c2 += 1
+                ans.append([i, j, r2, c2])
+        return ans
+

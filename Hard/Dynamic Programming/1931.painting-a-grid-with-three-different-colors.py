@@ -44,4 +44,29 @@ Constraints:
 
 class Solution:
     def colorTheGrid(self, m: int, n: int) -> int:
-        
+        MOD = 10**9 + 7
+        patterns = []
+        for mask in range(3 ** m):
+            p = []
+            x = mask
+            for _ in range(m):
+                p.append(x % 3)
+                x //= 3
+            if all(p[i] != p[i + 1] for i in range(m - 1)):
+                patterns.append(tuple(p))
+        k = len(patterns)
+        compat = [[] for _ in range(k)]
+        for i in range(k):
+            for j in range(k):
+                if all(patterns[i][r] != patterns[j][r] for r in range(m)):
+                    compat[i].append(j)
+        dp = [1] * k
+        for _ in range(n - 1):
+            ndp = [0] * k
+            for i in range(k):
+                total = 0
+                for j in compat[i]:
+                    total += dp[j]
+                ndp[i] = total % MOD
+            dp = ndp
+        return sum(dp) % MOD

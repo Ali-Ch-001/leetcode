@@ -63,6 +63,30 @@ Constraints:
 	• There exists a valid arrangement of pairs.
 """
 
+from collections import Counter, defaultdict
+
+
 class Solution:
     def validArrangement(self, pairs: list[list[int]]) -> list[list[int]]:
-        
+        adj = defaultdict(list)
+        outd = Counter()
+        ind = Counter()
+        for a, b in pairs:
+            adj[a].append(b)
+            outd[a] += 1
+            ind[b] += 1
+        start = pairs[0][0]
+        for node in adj:
+            if outd[node] - ind[node] == 1:
+                start = node
+                break
+        stack = [start]
+        path = []
+        while stack:
+            u = stack[-1]
+            if adj[u]:
+                stack.append(adj[u].pop())
+            else:
+                path.append(stack.pop())
+        path.reverse()
+        return [[path[i], path[i + 1]] for i in range(len(path) - 1)]

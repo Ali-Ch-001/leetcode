@@ -82,4 +82,25 @@ Constraints:
 
 class Solution:
     def minCost(self, maxTime: int, edges: list[list[int]], passingFees: list[int]) -> int:
-        
+        n = len(passingFees)
+        INF = float('inf')
+        adj = [[] for _ in range(n)]
+        for x, y, t in edges:
+            adj[x].append((y, t))
+            adj[y].append((x, t))
+        dp = [[INF] * n for _ in range(maxTime + 1)]
+        dp[0][0] = passingFees[0]
+        for t in range(maxTime + 1):
+            row = dp[t]
+            for v in range(n):
+                c = row[v]
+                if c == INF:
+                    continue
+                for u, w in adj[v]:
+                    nt = t + w
+                    if nt <= maxTime:
+                        nc = c + passingFees[u]
+                        if nc < dp[nt][u]:
+                            dp[nt][u] = nc
+        ans = min(dp[t][n - 1] for t in range(maxTime + 1))
+        return -1 if ans == INF else ans

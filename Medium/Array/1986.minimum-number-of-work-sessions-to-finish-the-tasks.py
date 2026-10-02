@@ -69,4 +69,25 @@ Constraints:
 
 class Solution:
     def minSessions(self, tasks: list[int], sessionTime: int) -> int:
-        
+        n = len(tasks)
+        full = (1 << n) - 1
+        INF = (10**9, 10**9)
+        dp = [INF] * (1 << n)
+        dp[0] = (1, 0)
+        for mask in range(1 << n):
+            sessions, used = dp[mask]
+            if sessions >= 10**9:
+                continue
+            for j in range(n):
+                bit = 1 << j
+                if mask & bit:
+                    continue
+                if used + tasks[j] <= sessionTime:
+                    cand = (sessions, used + tasks[j])
+                else:
+                    cand = (sessions + 1, tasks[j])
+                nxt = mask | bit
+                if cand < dp[nxt]:
+                    dp[nxt] = cand
+        return dp[full][0]
+

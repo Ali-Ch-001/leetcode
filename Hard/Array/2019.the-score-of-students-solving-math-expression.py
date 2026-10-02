@@ -99,4 +99,41 @@ intermediate steps of multiplication.
 
 class Solution:
     def scoreOfStudents(self, s: str, answers: list[int]) -> int:
-        
+        nums = [int(ch) for ch in s if ch.isdigit()]
+        ops = [ch for ch in s if ch in '+*']
+        k = len(nums)
+
+        def correct():
+            total = 0
+            term = nums[0]
+            for i, op in enumerate(ops):
+                if op == '*':
+                    term *= nums[i + 1]
+                else:
+                    total += term
+                    term = nums[i + 1]
+            return total + term
+
+        correct_ans = correct()
+        LIMIT = 1000
+        dp = [[set() for _ in range(k)] for _ in range(k)]
+        for i in range(k):
+            dp[i][i].add(nums[i])
+        for length in range(2, k + 1):
+            for i in range(0, k - length + 1):
+                j = i + length - 1
+                vals = dp[i][j]
+                for mid in range(i, j):
+                    for a in dp[i][mid]:
+                        for b in dp[mid + 1][j]:
+                            v = a * b if ops[mid] == '*' else a + b
+                            if v <= LIMIT:
+                                vals.add(v)
+        possible = dp[0][k - 1]
+        total = 0
+        for a in answers:
+            if a == correct_ans:
+                total += 5
+            elif a in possible:
+                total += 2
+        return total

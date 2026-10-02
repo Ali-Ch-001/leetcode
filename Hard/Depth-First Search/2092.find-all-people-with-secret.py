@@ -80,6 +80,36 @@ Constraints:
 	• 1 <= firstPerson <= n - 1
 """
 
+from collections import defaultdict, deque
+
+
 class Solution:
     def findAllPeople(self, n: int, meetings: list[list[int]], firstPerson: int) -> list[int]:
-        
+        know = [False] * n
+        know[0] = True
+        know[firstPerson] = True
+        by_time = defaultdict(list)
+        for x, y, t in meetings:
+            by_time[t].append((x, y))
+        for t in sorted(by_time):
+            adj = defaultdict(list)
+            people = set()
+            for x, y in by_time[t]:
+                adj[x].append(y)
+                adj[y].append(x)
+                people.add(x)
+                people.add(y)
+            q = deque()
+            visited = set()
+            for p in people:
+                if know[p]:
+                    q.append(p)
+                    visited.add(p)
+            while q:
+                u = q.popleft()
+                for v in adj[u]:
+                    if v not in visited:
+                        visited.add(v)
+                        know[v] = True
+                        q.append(v)
+        return [i for i in range(n) if know[i]]

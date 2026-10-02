@@ -66,4 +66,47 @@ paths[i].
 
 class Solution:
     def longestCommonSubpath(self, n: int, paths: list[list[int]]) -> int:
-        
+        M1, M2 = 10**9 + 7, 10**9 + 9
+        B1, B2 = 911382323, 972663749
+        paths = sorted(paths, key=len)
+        hi = len(paths[0])
+        maxlen = max(len(p) for p in paths)
+        pow1 = [1] * (maxlen + 1)
+        pow2 = [1] * (maxlen + 1)
+        for i in range(1, maxlen + 1):
+            pow1[i] = pow1[i - 1] * B1 % M1
+            pow2[i] = pow2[i - 1] * B2 % M2
+
+        def check(L):
+            if L == 0:
+                return True
+            common = None
+            for p in paths:
+                if len(p) < L:
+                    return False
+                h1 = h2 = 0
+                for i in range(L):
+                    v = p[i] + 1
+                    h1 = (h1 * B1 + v) % M1
+                    h2 = (h2 * B2 + v) % M2
+                cur = {(h1, h2)}
+                for i in range(L, len(p)):
+                    h1 = ((h1 - (p[i - L] + 1) * pow1[L - 1]) * B1 + p[i] + 1) % M1
+                    h2 = ((h2 - (p[i - L] + 1) * pow2[L - 1]) * B2 + p[i] + 1) % M2
+                    cur.add((h1, h2))
+                if common is None:
+                    common = cur
+                else:
+                    common &= cur
+                    if not common:
+                        return False
+            return bool(common)
+
+        lo = 0
+        while lo < hi:
+            mid = (lo + hi + 1) // 2
+            if check(mid):
+                lo = mid
+            else:
+                hi = mid - 1
+        return lo

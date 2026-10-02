@@ -42,6 +42,13 @@ Constraints:
 	• words[i] consists of lowercase English letters.
 """
 
+from collections import Counter
+
+
 class Solution:
     def makeEqual(self, words: list[str]) -> bool:
-        
+        n = len(words)
+        cnt = Counter()
+        for w in words:
+            cnt.update(w)
+        return all(c % n == 0 for c in cnt.values())

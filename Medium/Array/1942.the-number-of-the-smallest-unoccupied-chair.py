@@ -69,6 +69,22 @@ Constraints:
 	• Each arrivali time is distinct.
 """
 
+import heapq
+
+
 class Solution:
     def smallestChair(self, times: list[list[int]], targetFriend: int) -> int:
-        
+        n = len(times)
+        free = list(range(n))
+        heapq.heapify(free)
+        busy = []
+        for i in sorted(range(n), key=lambda i: times[i][0]):
+            a, l = times[i]
+            while busy and busy[0][0] <= a:
+                _, ch = heapq.heappop(busy)
+                heapq.heappush(free, ch)
+            ch = heapq.heappop(free)
+            if i == targetFriend:
+                return ch
+            heapq.heappush(busy, (l, ch))
+        return -1

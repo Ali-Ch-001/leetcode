@@ -51,4 +51,12 @@ Constraints:
 
 class Solution:
     def maximumDifference(self, nums: list[int]) -> int:
-        
+        best = -1
+        min_seen = nums[0]
+        for v in nums[1:]:
+            if v > min_seen:
+                if v - min_seen > best:
+                    best = v - min_seen
+            elif v < min_seen:
+                min_seen = v
+        return best

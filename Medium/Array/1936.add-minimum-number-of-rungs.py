@@ -60,4 +60,11 @@ Constraints:
 
 class Solution:
     def addRungs(self, rungs: list[int], dist: int) -> int:
-        
+        ans = 0
+        prev = 0
+        for r in rungs:
+            gap = r - prev
+            if gap > dist:
+                ans += (gap - 1) // dist
+            prev = r
+        return ans

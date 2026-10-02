@@ -66,4 +66,20 @@ Constraints:
 
 class Solution:
     def maximumBeauty(self, items: list[list[int]], queries: list[int]) -> list[int]:
-        
+        import bisect
+
+        items.sort()
+        prices = []
+        best = []
+        cur = 0
+        for p, b in items:
+            if b > cur:
+                cur = b
+            prices.append(p)
+            best.append(cur)
+        ans = []
+        for q in queries:
+            i = bisect.bisect_right(prices, q) - 1
+            ans.append(best[i] if i >= 0 else 0)
+        return ans
+

@@ -68,4 +68,20 @@ Constraints:
 
 class Solution:
     def maxPoints(self, points: list[list[int]]) -> int:
-        
+        prev = points[0][:]
+        n = len(prev)
+        for row in points[1:]:
+            left = [0] * n
+            best = -10**18
+            for c in range(n):
+                if prev[c] + c > best:
+                    best = prev[c] + c
+                left[c] = best - c
+            right = [0] * n
+            best = -10**18
+            for c in range(n - 1, -1, -1):
+                if prev[c] - c > best:
+                    best = prev[c] - c
+                right[c] = best + c
+            prev = [row[c] + (left[c] if left[c] > right[c] else right[c]) for c in range(n)]
+        return max(prev)

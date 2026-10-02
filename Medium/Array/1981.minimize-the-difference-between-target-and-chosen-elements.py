@@ -64,4 +64,21 @@ Constraints:
 
 class Solution:
     def minimizeTheDifference(self, mat: list[list[int]], target: int) -> int:
-        
+        dp = 1
+        for row in mat:
+            vals = set(row)
+            nxt = 0
+            for v in vals:
+                nxt |= dp << v
+            dp = nxt
+        ans = float('inf')
+        s = 0
+        while dp:
+            if dp & 1:
+                d = abs(s - target)
+                if d < ans:
+                    ans = d
+            dp >>= 1
+            s += 1
+        return ans
+

@@ -74,4 +74,11 @@ Constraints:
 
 class Solution:
     def mergeTriplets(self, triplets: list[list[int]], target: list[int]) -> bool:
-        
+        x, y, z = target
+        a = b = c = 0
+        for p, q, r in triplets:
+            if p <= x and q <= y and r <= z:
+                a = max(a, p)
+                b = max(b, q)
+                c = max(c, r)
+        return [a, b, c] == target

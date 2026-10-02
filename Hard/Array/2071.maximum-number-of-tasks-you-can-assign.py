@@ -74,4 +74,49 @@ Constraints:
 
 class Solution:
     def maxTaskAssign(self, tasks: list[int], workers: list[int], pills: int, strength: int) -> int:
-        
+        import bisect
+
+        tasks.sort()
+        workers.sort()
+        n, m = len(tasks), len(workers)
+
+        def can(k: int) -> bool:
+            ts = tasks[:k]
+            ws = workers[m - k:]
+            parent = list(range(k + 1))
+
+            def find(x: int) -> int:
+                while parent[x] != x:
+                    parent[x] = parent[parent[x]]
+                    x = parent[x]
+                return x
+
+            hi = k - 1
+            p = pills
+            for t in reversed(ts):
+                if hi >= 0 and ws[hi] >= t:
+                    parent[hi] = find(hi + 1)
+                    while hi >= 0 and parent[hi] != hi:
+                        hi -= 1
+                else:
+                    if p == 0:
+                        return False
+                    idx = find(bisect.bisect_left(ws, t - strength))
+                    if idx >= k:
+                        return False
+                    parent[idx] = find(idx + 1)
+                    p -= 1
+                    if idx == hi:
+                        while hi >= 0 and parent[hi] != hi:
+                            hi -= 1
+            return True
+
+        lo, hi = 0, min(n, m)
+        while lo < hi:
+            mid = (lo + hi + 1) // 2
+            if can(mid):
+                lo = mid
+            else:
+                hi = mid - 1
+        return lo
+

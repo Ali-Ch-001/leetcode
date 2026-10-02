@@ -63,4 +63,12 @@ Constraints:
 
 class Solution:
     def numberOfRounds(self, loginTime: str, logoutTime: str) -> int:
-        
+        def to_min(t):
+            h, m = map(int, t.split(':'))
+            return h * 60 + m
+
+        start = to_min(loginTime)
+        end = to_min(logoutTime)
+        if end < start:
+            end += 24 * 60
+        return max(0, end // 15 - (start + 14) // 15)

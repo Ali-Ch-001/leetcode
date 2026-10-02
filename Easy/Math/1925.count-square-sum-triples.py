@@ -33,6 +33,16 @@ Constraints:
 	• 1 <= n <= 250
 """
 
+from math import isqrt
+
+
 class Solution:
     def countTriples(self, n: int) -> int:
-        
+        ans = 0
+        for c in range(1, n + 1):
+            cc = c * c
+            for a in range(1, c):
+                b = isqrt(cc - a * a)
+                if b >= 1 and b * b == cc - a * a:
+                    ans += 1
+        return ans

@@ -62,6 +62,42 @@ Constraints:
 	• -10^4 <= sums[i] <= 10^4
 """
 
+from collections import Counter
+
 class Solution:
     def recoverArray(self, n: int, sums: list[int]) -> list[int]:
-        
+        mn = min(sums)
+        vals = sorted(s - mn for s in sums)
+
+        def rec(T):
+            if len(T) == 1:
+                return []
+            if T[0] == T[-1]:
+                return [0] * (len(T).bit_length() - 1)
+            d = T[0]
+            for v in T:
+                if v > 0:
+                    d = v
+                    break
+            cnt = Counter(T)
+            rest = []
+            for v in T:
+                if cnt[v] > 0:
+                    rest.append(v)
+                    cnt[v] -= 1
+                    cnt[v + d] -= 1
+            return rec(rest) + [d]
+
+        b = rec(vals)
+        need = -mn
+        neg = 0
+        for i in range(1 << len(b)):
+            s = 0
+            for j in range(len(b)):
+                if i >> j & 1:
+                    s += b[j]
+            if s == need:
+                neg = i
+                break
+        return [-b[i] if neg >> i & 1 else b[i] for i in range(len(b))]
+

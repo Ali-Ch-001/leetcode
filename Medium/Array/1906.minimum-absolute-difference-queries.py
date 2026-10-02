@@ -75,4 +75,24 @@ Constraints:
 
 class Solution:
     def minDifference(self, nums: list[int], queries: list[list[int]]) -> list[int]:
-        
+        MAXV = 100
+        n = len(nums)
+        prefix = [[0] * (MAXV + 1) for _ in range(n + 1)]
+        for i, v in enumerate(nums):
+            prefix[i + 1] = prefix[i][:]
+            prefix[i + 1][v] += 1
+        ans = []
+        for l, r in queries:
+            prev = -1
+            best = -1
+            row = prefix[r + 1]
+            start = prefix[l]
+            for v in range(1, MAXV + 1):
+                if row[v] - start[v] > 0:
+                    if prev != -1:
+                        d = v - prev
+                        if best == -1 or d < best:
+                            best = d
+                    prev = v
+            ans.append(best)
+        return ans

@@ -68,4 +68,16 @@ Constraints:
 
 class Solution:
     def gridGame(self, grid: list[list[int]]) -> int:
-        
+        n = len(grid[0])
+        top_suffix = [0] * (n + 1)
+        bottom_prefix = [0] * (n + 1)
+        for i in range(n - 1, -1, -1):
+            top_suffix[i] = top_suffix[i + 1] + grid[0][i]
+        for i in range(n):
+            bottom_prefix[i + 1] = bottom_prefix[i] + grid[1][i]
+        best = float('inf')
+        for i in range(n):
+            second = max(top_suffix[i + 1], bottom_prefix[i])
+            if second < best:
+                best = second
+        return best

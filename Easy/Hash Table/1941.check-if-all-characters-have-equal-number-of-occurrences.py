@@ -37,6 +37,9 @@ Constraints:
 	• s consists of lowercase English letters.
 """
 
+from collections import Counter
+
+
 class Solution:
     def areOccurrencesEqual(self, s: str) -> bool:
-        
+        return len(set(Counter(s).values())) == 1

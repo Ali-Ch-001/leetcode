@@ -73,4 +73,27 @@ Constraints:
 
 class Solution:
     def placeWordInCrossword(self, board: list[list[str]], word: str) -> bool:
-        
+        m, n = len(board), len(board[0])
+        L = len(word)
+        dirs = ((0, 1), (0, -1), (1, 0), (-1, 0))
+        for r in range(m):
+            for c in range(n):
+                for dr, dc in dirs:
+                    er, ec = r + dr * (L - 1), c + dc * (L - 1)
+                    if not (0 <= er < m and 0 <= ec < n):
+                        continue
+                    br, bc = r - dr, c - dc
+                    if 0 <= br < m and 0 <= bc < n and board[br][bc] != '#':
+                        continue
+                    ar, ac = er + dr, ec + dc
+                    if 0 <= ar < m and 0 <= ac < n and board[ar][ac] != '#':
+                        continue
+                    ok = True
+                    for k in range(L):
+                        cell = board[r + dr * k][c + dc * k]
+                        if cell != ' ' and cell != word[k]:
+                            ok = False
+                            break
+                    if ok:
+                        return True
+        return False
