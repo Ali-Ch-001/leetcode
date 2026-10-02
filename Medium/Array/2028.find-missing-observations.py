@@ -61,4 +61,9 @@ Constraints:
 
 class Solution:
     def missingRolls(self, rolls: list[int], mean: int, n: int) -> list[int]:
-        
+        m = len(rolls)
+        missing = mean * (n + m) - sum(rolls)
+        if missing < n or missing > 6 * n:
+            return []
+        base, rem = divmod(missing, n)
+        return [base + 1] * rem + [base] * (n - rem)

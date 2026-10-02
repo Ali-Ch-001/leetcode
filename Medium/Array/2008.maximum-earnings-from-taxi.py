@@ -63,4 +63,15 @@ Constraints:
 
 class Solution:
     def maxTaxiEarnings(self, n: int, rides: list[list[int]]) -> int:
-        
+        by_end = [[] for _ in range(n + 1)]
+        for start, end, tip in rides:
+            by_end[end].append((start, end - start + tip))
+        dp = [0] * (n + 1)
+        for i in range(1, n + 1):
+            best = dp[i - 1]
+            for start, profit in by_end[i]:
+                cand = dp[start] + profit
+                if cand > best:
+                    best = cand
+            dp[i] = best
+        return dp[n]

@@ -59,6 +59,36 @@ Constraints:
 	• -10^5 <= k, nums[i] <= 10^5
 """
 
+from collections import Counter
+
+
 class Solution:
     def waysToPartition(self, nums: list[int], k: int) -> int:
-        
+        n = len(nums)
+        total = sum(nums)
+        prefix = [0] * (n + 1)
+        for i, v in enumerate(nums):
+            prefix[i + 1] = prefix[i] + v
+
+        base = 0
+        for j in range(1, n):
+            if 2 * prefix[j] == total:
+                base += 1
+
+        left = Counter()
+        right = Counter(prefix[1:n])
+        best = base
+        for i in range(n):
+            delta = k - nums[i]
+            cur = 0
+            if (total - delta) % 2 == 0:
+                cur += right[(total - delta) // 2]
+            if (total + delta) % 2 == 0:
+                cur += left[(total + delta) // 2]
+            if cur > best:
+                best = cur
+            if i + 1 < n:
+                p = prefix[i + 1]
+                right[p] -= 1
+                left[p] += 1
+        return best

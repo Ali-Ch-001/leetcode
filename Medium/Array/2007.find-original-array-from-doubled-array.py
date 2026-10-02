@@ -48,4 +48,25 @@ Constraints:
 
 class Solution:
     def findOriginalArray(self, changed: list[int]) -> list[int]:
-        
+        if len(changed) % 2:
+            return []
+        counts = {}
+        for v in changed:
+            counts[v] = counts.get(v, 0) + 1
+        original = []
+        for v in sorted(counts):
+            c = counts[v]
+            if c == 0:
+                continue
+            if v == 0:
+                if c % 2:
+                    return []
+                original.extend([0] * (c // 2))
+                counts[v] = 0
+            else:
+                if counts.get(2 * v, 0) < c:
+                    return []
+                original.extend([v] * c)
+                counts[2 * v] -= c
+                counts[v] = 0
+        return original

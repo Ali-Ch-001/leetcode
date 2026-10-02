@@ -82,16 +82,38 @@ getDir.
 class Robot:
 
     def __init__(self, width: int, height: int):
-        
+        self.w = width
+        self.h = height
+        self.per = 2 * (width + height) - 4
+        self.pos = 0
+        self.moved = False
 
     def step(self, num: int) -> None:
-        
+        self.moved = True
+        self.pos = (self.pos + num) % self.per
 
     def getPos(self) -> list[int]:
-        
+        w, h, p = self.w, self.h, self.pos
+        if p <= w - 1:
+            return [p, 0]
+        if p <= w + h - 2:
+            return [w - 1, p - (w - 1)]
+        if p <= 2 * w + h - 3:
+            return [w - 1 - (p - (w + h - 2)), h - 1]
+        return [0, h - 1 - (p - (2 * w + h - 3))]
 
     def getDir(self) -> str:
-        
+        p = self.pos
+        if p == 0:
+            return "East" if not self.moved else "South"
+        w, h = self.w, self.h
+        if p <= w - 1:
+            return "East"
+        if p <= w + h - 2:
+            return "North"
+        if p <= 2 * w + h - 3:
+            return "West"
+        return "South"
 
 
 # Your Robot object will be instantiated and called as such:

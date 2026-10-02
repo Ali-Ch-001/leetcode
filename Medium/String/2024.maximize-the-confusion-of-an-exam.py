@@ -65,4 +65,19 @@ Constraints:
 
 class Solution:
     def maxConsecutiveAnswers(self, answerKey: str, k: int) -> int:
-        
+        def longest(target: str) -> int:
+            left = 0
+            changed = 0
+            best = 0
+            for right, ch in enumerate(answerKey):
+                if ch != target:
+                    changed += 1
+                while changed > k:
+                    if answerKey[left] != target:
+                        changed -= 1
+                    left += 1
+                if right - left + 1 > best:
+                    best = right - left + 1
+            return best
+
+        return max(longest('T'), longest('F'))

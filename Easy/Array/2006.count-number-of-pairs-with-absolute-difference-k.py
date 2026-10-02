@@ -54,4 +54,9 @@ Constraints:
 
 class Solution:
     def countKDifference(self, nums: list[int], k: int) -> int:
-        
+        counts = {}
+        total = 0
+        for v in nums:
+            total += counts.get(v - k, 0) + counts.get(v + k, 0)
+            counts[v] = counts.get(v, 0) + 1
+        return total

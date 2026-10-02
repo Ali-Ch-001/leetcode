@@ -81,4 +81,40 @@ Constraints:
 
 class Solution:
     def smallestMissingValueSubtree(self, parents: list[int], nums: list[int]) -> list[int]:
-        
+        n = len(parents)
+        children = [[] for _ in range(n)]
+        for i in range(1, n):
+            children[parents[i]].append(i)
+
+        ans = [1] * n
+        start = -1
+        for i, v in enumerate(nums):
+            if v == 1:
+                start = i
+                break
+        if start == -1:
+            return ans
+
+        seen_values = set()
+        visited = [False] * n
+        mex = 1
+
+        def dfs(node):
+            stack = [node]
+            visited[node] = True
+            while stack:
+                u = stack.pop()
+                seen_values.add(nums[u])
+                for c in children[u]:
+                    if not visited[c]:
+                        visited[c] = True
+                        stack.append(c)
+
+        cur = start
+        while cur != -1:
+            dfs(cur)
+            while mex in seen_values:
+                mex += 1
+            ans[cur] = mex
+            cur = parents[cur]
+        return ans

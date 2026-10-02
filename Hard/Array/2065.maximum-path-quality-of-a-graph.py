@@ -85,4 +85,28 @@ Constraints:
 
 class Solution:
     def maximalPathQuality(self, values: list[int], edges: list[list[int]], maxTime: int) -> int:
-        
+        n = len(values)
+        adj = [[] for _ in range(n)]
+        for u, v, t in edges:
+            adj[u].append((v, t))
+            adj[v].append((u, t))
+        visited = [False] * n
+        visited[0] = True
+        best = 0
+
+        def dfs(u: int, time: int, quality: int) -> None:
+            nonlocal best
+            if u == 0 and quality > best:
+                best = quality
+            for v, t in adj[u]:
+                if time + t <= maxTime:
+                    if visited[v]:
+                        dfs(v, time + t, quality)
+                    else:
+                        visited[v] = True
+                        dfs(v, time + t, quality + values[v])
+                        visited[v] = False
+
+        dfs(0, 0, values[0])
+        return best
+
