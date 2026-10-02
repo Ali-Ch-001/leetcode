@@ -67,4 +67,16 @@ Constraints:
 
 class Solution:
     def largestMerge(self, word1: str, word2: str) -> str:
-        
+        i = j = 0
+        n1, n2 = len(word1), len(word2)
+        out = []
+        while i < n1 and j < n2:
+            if word1[i:] > word2[j:]:
+                out.append(word1[i])
+                i += 1
+            else:
+                out.append(word2[j])
+                j += 1
+        out.append(word1[i:])
+        out.append(word2[j:])
+        return ''.join(out)

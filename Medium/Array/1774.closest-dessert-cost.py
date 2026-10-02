@@ -80,4 +80,14 @@ Constraints:
 
 class Solution:
     def closestCost(self, baseCosts: list[int], toppingCosts: list[int], target: int) -> int:
-        
+        sums = {0}
+        for t in toppingCosts:
+            sums = sums | {s + t for s in sums} | {s + 2 * t for s in sums}
+        best = None
+        for b in baseCosts:
+            for s in sums:
+                cost = b + s
+                if best is None or abs(cost - target) < abs(best - target) or (
+                        abs(cost - target) == abs(best - target) and cost < best):
+                    best = cost
+        return best

@@ -54,4 +54,22 @@ Constraints:
 
 class Solution:
     def kthLargestValue(self, matrix: list[list[int]], k: int) -> int:
-        
+        m, n = len(matrix), len(matrix[0])
+        vals = []
+        prev = [0] * n
+        for i in range(m):
+            row = matrix[i]
+            cur = [0] * n
+            for j in range(n):
+                v = row[j]
+                if i:
+                    v ^= prev[j]
+                if j:
+                    v ^= cur[j - 1]
+                if i and j:
+                    v ^= prev[j - 1]
+                cur[j] = v
+                vals.append(v)
+            prev = cur
+        vals.sort(reverse=True)
+        return vals[k - 1]

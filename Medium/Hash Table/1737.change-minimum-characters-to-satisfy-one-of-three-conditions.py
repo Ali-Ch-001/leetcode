@@ -55,4 +55,24 @@ Constraints:
 
 class Solution:
     def minCharacters(self, a: str, b: str) -> int:
-        
+        ca = [0] * 26
+        cb = [0] * 26
+        for ch in a:
+            ca[ord(ch) - 97] += 1
+        for ch in b:
+            cb[ord(ch) - 97] += 1
+        la, lb = len(a), len(b)
+
+        best = la + lb - max(ca[i] + cb[i] for i in range(26))
+
+        ca_leq = cb_leq = 0
+        for x in range(25):
+            ca_leq += ca[x]
+            cb_leq += cb[x]
+            cost = (la - ca_leq) + cb_leq
+            if cost < best:
+                best = cost
+            cost = (lb - cb_leq) + ca_leq
+            if cost < best:
+                best = cost
+        return best

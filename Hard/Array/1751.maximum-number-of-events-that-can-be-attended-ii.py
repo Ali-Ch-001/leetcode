@@ -58,4 +58,20 @@ Constraints:
 
 class Solution:
     def maxValue(self, events: list[list[int]], k: int) -> int:
-        
+        import bisect
+
+        events.sort(key=lambda x: x[1])
+        n = len(events)
+        ends = [e[1] for e in events]
+        dp = [[0] * (k + 1) for _ in range(n + 1)]
+        for i in range(1, n + 1):
+            s, _, v = events[i - 1]
+            p = bisect.bisect_left(ends, s)
+            row = dp[i]
+            prev = dp[i - 1]
+            dpp = dp[p]
+            for j in range(1, k + 1):
+                a = prev[j]
+                b = dpp[j - 1] + v
+                row[j] = a if a > b else b
+        return dp[n][k]

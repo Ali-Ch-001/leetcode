@@ -37,4 +37,12 @@ Constraints:
 
 class Solution:
     def beautySum(self, s: str) -> int:
-        
+        total = 0
+        n = len(s)
+        for i in range(n):
+            cnt = [0] * 26
+            for j in range(i, n):
+                cnt[ord(s[j]) - 97] += 1
+                freqs = [c for c in cnt if c]
+                total += max(freqs) - min(freqs)
+        return total

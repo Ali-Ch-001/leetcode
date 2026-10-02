@@ -55,4 +55,23 @@ Constraints:
 
 class Solution:
     def getCollisionTimes(self, cars: list[list[int]]) -> list[float]:
-        
+        n = len(cars)
+        ans = [-1.0] * n
+        stack = []
+        for i in range(n - 1, -1, -1):
+            pos, spd = cars[i]
+            while stack:
+                j = stack[-1]
+                if spd <= cars[j][1]:
+                    stack.pop()
+                    continue
+                t = (cars[j][0] - pos) / (spd - cars[j][1])
+                if ans[j] != -1 and t >= ans[j]:
+                    stack.pop()
+                    continue
+                break
+            if stack:
+                j = stack[-1]
+                ans[i] = (cars[j][0] - pos) / (spd - cars[j][1])
+            stack.append(i)
+        return ans

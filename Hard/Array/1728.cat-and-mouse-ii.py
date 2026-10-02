@@ -88,4 +88,98 @@ Constraints:
 
 class Solution:
     def canMouseWin(self, grid: list[str], catJump: int, mouseJump: int) -> bool:
-        
+        from collections import deque
+
+        R, C = len(grid), len(grid[0])
+        cells = {}
+        for r in range(R):
+            for c in range(C):
+                ch = grid[r][c]
+                if ch != '#':
+                    cells[(r, c)] = len(cells)
+                if ch == 'M':
+                    mouse = (r, c)
+                elif ch == 'C':
+                    cat = (r, c)
+                elif ch == 'F':
+                    food = (r, c)
+        N = len(cells)
+        mi, ci, fi = cells[mouse], cells[cat], cells[food]
+
+        def build_moves(jump):
+            moves = [[] for _ in range(N)]
+            for (r, c), idx in cells.items():
+                lst = [idx]
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    for step in range(1, jump + 1):
+                        nr, nc = r + dr * step, c + dc * step
+                        if not (0 <= nr < R and 0 <= nc < C):
+                            break
+                        if grid[nr][nc] == '#':
+                            break
+                        lst.append(cells[(nr, nc)])
+                moves[idx] = lst
+            return moves
+
+        mouse_moves = build_moves(mouseJump)
+        cat_moves = build_moves(catJump)
+
+        mouse_prev = [[] for _ in range(N)]
+        for u in range(N):
+            for v in mouse_moves[u]:
+                mouse_prev[v].append(u)
+        cat_prev = [[] for _ in range(N)]
+        for u in range(N):
+            for v in cat_moves[u]:
+                cat_prev[v].append(u)
+
+        MOUSE, CAT = 1, 2
+        S = N * N * 2
+        status = bytearray(S)
+        degree = [0] * S
+        q = deque()
+        for m in range(N):
+            base = m * N
+            for c in range(N):
+                for t in range(2):
+                    st = (base + c) * 2 + t
+                    if m == fi:
+                        status[st] = MOUSE
+                        q.append(st)
+                    elif c == fi or c == m:
+                        status[st] = CAT
+                        q.append(st)
+                    else:
+                        degree[st] = len(mouse_moves[m]) if t == 0 else len(cat_moves[c])
+        while q:
+            st = q.popleft()
+            w = status[st]
+            t = st & 1
+            m, c = divmod(st >> 1, N)
+            if t == 1:
+                for mp in mouse_prev[m]:
+                    p = ((mp * N) + c) * 2
+                    if status[p]:
+                        continue
+                    if w == MOUSE:
+                        status[p] = MOUSE
+                        q.append(p)
+                    else:
+                        degree[p] -= 1
+                        if degree[p] == 0:
+                            status[p] = CAT
+                            q.append(p)
+            else:
+                for cp in cat_prev[c]:
+                    p = ((m * N) + cp) * 2 + 1
+                    if status[p]:
+                        continue
+                    if w == CAT:
+                        status[p] = CAT
+                        q.append(p)
+                    else:
+                        degree[p] -= 1
+                        if degree[p] == 0:
+                            status[p] = MOUSE
+                            q.append(p)
+        return status[(mi * N + ci) * 2] == MOUSE

@@ -41,4 +41,9 @@ Constraints:
 
 class Solution:
     def largestAltitude(self, gain: list[int]) -> int:
-        
+        cur = best = 0
+        for g in gain:
+            cur += g
+            if cur > best:
+                best = cur
+        return best

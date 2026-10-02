@@ -60,4 +60,20 @@ Constraints:
 
 class Solution:
     def restoreArray(self, adjacentPairs: list[list[int]]) -> list[int]:
-        
+        from collections import defaultdict
+
+        adj = defaultdict(list)
+        for u, v in adjacentPairs:
+            adj[u].append(v)
+            adj[v].append(u)
+        start = next(x for x, nb in adj.items() if len(nb) == 1)
+        res = [start]
+        prev = None
+        cur = start
+        while len(res) < len(adjacentPairs) + 1:
+            for nb in adj[cur]:
+                if nb != prev:
+                    prev, cur = cur, nb
+                    res.append(cur)
+                    break
+        return res

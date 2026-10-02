@@ -56,4 +56,19 @@ Constraints:
 
 class Solution:
     def minOperations(self, nums1: list[int], nums2: list[int]) -> int:
-        
+        s1, s2 = sum(nums1), sum(nums2)
+        if s1 == s2:
+            return 0
+        if s1 < s2:
+            small, large, diff = nums1, nums2, s2 - s1
+        else:
+            small, large, diff = nums2, nums1, s1 - s2
+        gains = [6 - v for v in small] + [v - 1 for v in large]
+        gains.sort(reverse=True)
+        ops = 0
+        for g in gains:
+            if diff <= 0:
+                break
+            diff -= g
+            ops += 1
+        return ops if diff <= 0 else -1

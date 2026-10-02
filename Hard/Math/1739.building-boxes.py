@@ -54,4 +54,16 @@ Constraints:
 
 class Solution:
     def minimumBoxes(self, n: int) -> int:
-        
+        total = 0
+        h = 0
+        while total + (h + 1) * (h + 2) // 2 <= n:
+            h += 1
+            total += h * (h + 1) // 2
+        base = h * (h + 1) // 2
+        rem = n - total
+        i = 0
+        while rem > 0:
+            i += 1
+            base += 1
+            rem -= i
+        return base

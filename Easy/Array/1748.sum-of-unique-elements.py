@@ -41,4 +41,7 @@ Constraints:
 
 class Solution:
     def sumOfUnique(self, nums: list[int]) -> int:
-        
+        from collections import Counter
+
+        cnt = Counter(nums)
+        return sum(x for x in nums if cnt[x] == 1)

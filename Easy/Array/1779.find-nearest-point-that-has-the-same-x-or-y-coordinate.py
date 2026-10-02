@@ -56,4 +56,12 @@ Constraints:
 
 class Solution:
     def nearestValidPoint(self, x: int, y: int, points: list[list[int]]) -> int:
-        
+        best = -1
+        best_dist = float('inf')
+        for i, (a, b) in enumerate(points):
+            if a == x or b == y:
+                d = abs(a - x) + abs(b - y)
+                if d < best_dist:
+                    best_dist = d
+                    best = i
+        return best

@@ -70,4 +70,20 @@ Constraints:
 
 class Solution:
     def minimumTeachings(self, n: int, languages: list[list[int]], friendships: list[list[int]]) -> int:
-        
+        known = [set(l) for l in languages]
+        bad = set()
+        for u, v in friendships:
+            if known[u - 1].isdisjoint(known[v - 1]):
+                bad.add(u - 1)
+                bad.add(v - 1)
+        if not bad:
+            return 0
+        best = len(bad)
+        for lang in range(1, n + 1):
+            cnt = 0
+            for u in bad:
+                if lang not in known[u]:
+                    cnt += 1
+            if cnt < best:
+                best = cnt
+        return best

@@ -45,4 +45,13 @@ Constraints:
 
 class Solution:
     def maxAbsoluteSum(self, nums: list[int]) -> int:
-        
+        cur_max = cur_min = 0
+        best = 0
+        for x in nums:
+            cur_max = max(x, cur_max + x)
+            cur_min = min(x, cur_min + x)
+            if cur_max > best:
+                best = cur_max
+            if -cur_min > best:
+                best = -cur_min
+        return best

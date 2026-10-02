@@ -56,4 +56,13 @@ Constraints:
 
 class Solution:
     def countBalls(self, lowLimit: int, highLimit: int) -> int:
-        
+        from collections import Counter
+
+        cnt = Counter()
+        for x in range(lowLimit, highLimit + 1):
+            s = 0
+            while x:
+                s += x % 10
+                x //= 10
+            cnt[s] += 1
+        return max(cnt.values())

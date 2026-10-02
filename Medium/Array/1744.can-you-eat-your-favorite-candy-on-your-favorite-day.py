@@ -74,4 +74,10 @@ Constraints:
 
 class Solution:
     def canEat(self, candiesCount: list[int], queries: list[list[int]]) -> list[bool]:
-        
+        pre = [0]
+        for c in candiesCount:
+            pre.append(pre[-1] + c)
+        res = []
+        for t, d, cap in queries:
+            res.append(pre[t] < (d + 1) * cap and d < pre[t + 1])
+        return res
